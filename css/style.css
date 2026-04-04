@@ -11563,7 +11563,9 @@ p {
 .ftco-footer-social li.normal-txt {
   margin-right: 0.35rem;
   font-size: 0.95rem;
-  white-space: nowrap;
+  flex: 0 1 auto;
+  min-width: 0;
+  white-space: normal;
 }
 
 .ftco-footer-social li:not(.normal-txt) {
@@ -11592,6 +11594,10 @@ p {
   .ftco-footer-social li.normal-txt {
     font-size: 0.85rem;
     margin-right: 0.25rem;
+    flex: 0 1 100%;
+    min-width: 0;
+    white-space: normal;
+    text-align: center;
   }
 
   .ftco-footer-social li a.social-icon {
