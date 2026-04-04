@@ -4709,7 +4709,7 @@ a.close.disabled {
   padding: 0.75rem; }
 
 .modal-open {
-  overflow: hidden; }
+  overflow: auto !important; }
   .modal-open .modal {
     overflow-x: hidden;
     overflow-y: auto; }
@@ -11544,16 +11544,14 @@ p {
 /* Find With Me footer icons */
 .ftco-footer-social {
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   gap: 0.5rem;
   padding: 0;
   margin: 0;
-  overflow-x: auto;
-  overflow-y: visible;
-  white-space: nowrap;
-  -webkit-overflow-scrolling: touch;
+  overflow: hidden;
+  white-space: normal;
 }
 
 .ftco-footer-social li {
