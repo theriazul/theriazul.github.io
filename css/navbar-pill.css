@@ -1,0 +1,290 @@
+﻿/* Modern Pill Navbar Styling */
+
+/* Main Navbar Container */
+#ftco-navbar {
+width: 100%;
+padding: 0;
+display: flex;
+align-items: center;
+justify-content: center;
+position: fixed;
+top: 20px;
+left: 0;
+right: 0;
+z-index: 1030;
+box-sizing: border-box;
+overflow-x: hidden;
+}
+
+#ftco-navbar .container {
+gap: 20px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+width: 100%;
+}
+
+/* Brand Styling */
+#ftco-navbar .navbar-brand {
+white-space: nowrap;
+font-weight: 900;
+font-size: 16px;
+letter-spacing: 0.5px;
+margin: 0;
+padding-top: 0.5rem;
+padding-bottom: 0.5rem;
+flex-shrink: 0;
+}
+
+#ftco-navbar .logo {
+margin-right: 12px;
+flex-shrink: 0;
+}
+
+/* Navigation Items */
+#ftco-navbar .navbar-nav {
+display: flex;
+align-items: center;
+gap: 8px;
+margin: 0;
+}
+
+#ftco-navbar .nav-item .nav-link {
+white-space: nowrap;
+padding: 8px 16px;
+font-size: 14px;
+letter-spacing: 0.3px;
+position: relative;
+}
+
+/* Hamburger Menu Animation */
+.hamburger-icon {
+display: inline-block;
+width: 24px;
+height: 20px;
+position: relative;
+flex-shrink: 0;
+}
+
+.hamburger-line {
+display: block;
+height: 2px;
+background-color: rgba(255, 255, 255, 0.8);
+margin-bottom: 5px;
+transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+border-radius: 1px;
+}
+
+.hamburger-line:last-child {
+margin-bottom: 0;
+}
+
+.hamburger-icon.active .hamburger-line:nth-child(1) {
+transform: rotate(45deg) translate(12px, 12px);
+}
+
+.hamburger-icon.active .hamburger-line:nth-child(2) {
+opacity: 0;
+transform: translateX(-10px);
+}
+
+.hamburger-icon.active .hamburger-line:nth-child(3) {
+transform: rotate(-45deg) translate(8px, -8px);
+}
+
+/* Mobile Menu Styling */
+#ftco-nav.show {
+background: rgba(0, 0, 0, 0.98);
+border-radius: 16px;
+padding: 20px;
+margin-top: 10px;
+box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+position: fixed;
+left: 50%;
+transform: translateX(-50%);
+max-width: 95%;
+width: auto;
+top: auto;
+z-index: 1000;
+}
+
+#ftco-nav {
+width: 100%;
+display: flex;
+flex-wrap: wrap;
+margin: 0;
+padding: 0;
+}
+
+#ftco-nav .navbar-nav {
+flex-direction: column;
+width: 100%;
+gap: 0;
+}
+
+#ftco-nav .nav-item .nav-link {
+padding: 12px 16px;
+display: block;
+width: 100%;
+border-radius: 8px;
+transition: all 0.2s ease;
+}
+
+#ftco-nav .nav-item .nav-link:hover {
+background: rgba(255, 189, 57, 0.1);
+}
+
+/* Desktop Menu */
+@media (min-width: 992px) {
+#ftco-nav.collapse {
+display: flex !important;
+flex-direction: row;
+width: auto;
+position: static;
+max-width: none;
+background: none;
+border-radius: 0;
+padding: 0;
+margin: 0;
+box-shadow: none;
+transform: none;
+left: auto;
+}
+
+#ftco-nav.collapsing {
+display: flex;
+position: absolute;
+top: -500px;
+}
+
+#ftco-navbar .navbar-toggler {
+display: none;
+}
+}
+
+/* Tablet and Mobile */
+@media (max-width: 991px) {
+#ftco-navbar {
+position: fixed;
+top: 10px;
+left: 50%;
+transform: translateX(-50%);
+max-width: 95%;
+width: auto;
+border-radius: 16px;
+padding: 10px 20px;
+background: #000000 !important;
+box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+z-index: 3;
+}
+
+#ftco-navbar .container {
+width: auto;
+flex-wrap: wrap;
+gap: 12px;
+}
+
+#ftco-navbar .navbar-brand {
+font-size: 14px;
+white-space: nowrap;
+order: 1;
+flex-grow: 1;
+}
+
+#ftco-navbar .logo {
+order: 0;
+margin-right: 8px;
+}
+
+#ftco-navbar .navbar-toggler {
+order: 2;
+padding: 0;
+margin-left: auto;
+border: none;
+cursor: pointer;
+}
+
+#ftco-nav {
+order: 3;
+width: 100%;
+flex-basis: 100%;
+max-height: 0;
+overflow: hidden;
+transition: max-height 0.3s ease;
+margin-top: 10px;
+}
+
+#ftco-nav.show {
+max-height: 400px;
+overflow-y: auto;
+}
+
+body.menu-show #ftco-navbar {
+position: fixed;
+top: 10px;
+left: 50%;
+transform: translateX(-50%);
+max-width: 95%;
+}
+
+body.menu-show #ftco-navbar .container {
+width: 100%;
+flex-direction: column;
+align-items: flex-start;
+}
+}
+
+/* Small Mobile */
+@media (max-width: 576px) {
+#ftco-navbar {
+top: 8px;
+max-width: 96%;
+padding: 8px 16px;
+border-radius: 14px;
+}
+
+#ftco-navbar .navbar-brand {
+font-size: 13px;
+}
+
+#ftco-navbar .logo {
+width: 32px;
+height: 32px;
+margin-right: 6px;
+}
+
+#ftco-nav .nav-item .nav-link {
+font-size: 14px;
+padding: 10px 12px;
+}
+}
+
+/* Scrolled Navbar Enhancement */
+#ftco-navbar.scrolled {
+box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 1px rgba(255, 189, 57, 0.3);
+backdrop-filter: blur(15px);
+-webkit-backdrop-filter: blur(15px);
+background: rgba(0, 0, 0, 0.8) !important;
+}
+
+/* Link Hover Effects */
+#ftco-navbar .nav-link span::before {
+background: #ffbd39;
+transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#ftco-navbar .nav-link:hover span::before {
+transform: scaleX(1);
+}
+
+/* Accessibility */
+#ftco-navbar .navbar-toggler:focus {
+outline: 2px solid rgba(255, 189, 57, 0.5);
+outline-offset: 2px;
+border-radius: 4px;
+}
+
+#ftco-navbar .nav-link:focus {
+outline: 2px solid rgba(255, 189, 57, 0.5);
+outline-offset: -2px;
+}

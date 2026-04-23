@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stats Counter Animation Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 200vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            padding: 100px 0;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            margin: 50px 0;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            padding: 2rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            display: block;
+            transition: color 0.3s ease;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 15px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            color: #333;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .stat-number {
+                font-size: 2.5rem;
+            }
+
+            .stats-container {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <div class="container">
+            <h1>Scroll Down to See Counter Animation</h1>
+            <p>The stats will animate when the section comes into view and reset when it goes out of view.</p>
+        </div>
+    </div>
+
+    <section class="stats-section" id="stats-section">
+        <div class="container">
+            <div class="stats-container">
+                <div class="stat-item">
+                    <span class="stat-number" data-number="25">0</span>
+                    <div class="stat-label">Achievements</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-number="120">0</span>
+                    <div class="stat-label">Projects Completed</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-number="580">0</span>
+                    <div class="stat-label">Satisfied Clients</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-number="1000">0</span>
+                    <div class="stat-label">Positive Reviews</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="hero">
+        <div class="container">
+            <h1>Scroll Back Up</h1>
+            <p>The counters will reset and animate again when you scroll back down.</p>
+        </div>
+    </div>
+
+    <div class="scroll-indicator" id="scroll-indicator">
+        Section Status: Out of View
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const statsSection = document.getElementById('stats-section');
+            const counters = document.querySelectorAll('.stat-number');
+            const indicator = document.getElementById('scroll-indicator');
+
+            let isAnimating = false;
+
+            // Function to animate a single counter
+            function animateCounter(counter, targetValue) {
+                const startValue = 0;
+                const duration = 2000; // 2 seconds
+                const startTime = performance.now();
+
+                function updateCounter(currentTime) {
+                    const elapsed = currentTime - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+
+                    // Easing function for smooth animation (easeOutQuart)
+                    const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+                    const currentValue = Math.floor(startValue + (targetValue - startValue) * easeOutQuart);
+
+                    counter.textContent = currentValue.toLocaleString();
+
+                    if (progress < 1) {
+                        requestAnimationFrame(updateCounter);
+                    }
+                }
+
+                requestAnimationFrame(updateCounter);
+            }
+
+            // Function to start all counter animations
+            function startCounterAnimation() {
+                if (isAnimating) return;
+                isAnimating = true;
+
+                indicator.textContent = 'Section Status: Animating...';
+
+                counters.forEach(counter => {
+                    const targetValue = parseInt(counter.getAttribute('data-number')) || 0;
+                    counter.textContent = '0';
+                    animateCounter(counter, targetValue);
+                });
+
+                // Reset animation flag after completion
+                setTimeout(() => {
+                    isAnimating = false;
+                    indicator.textContent = 'Section Status: Animation Complete';
+                }, 2500);
+            }
+
+            // Function to reset counters
+            function resetCounters() {
+                counters.forEach(counter => {
+                    counter.textContent = '0';
+                });
+                isAnimating = false;
+                indicator.textContent = 'Section Status: Reset';
+            }
+
+            // Create Intersection Observer
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Section is in view, start animation
+                        startCounterAnimation();
+                    } else {
+                        // Section is out of view, reset counters
+                        resetCounters();
+                    }
+                });
+            }, {
+                threshold: 0.3, // Trigger when 30% of the section is visible
+                rootMargin: '0px 0px -50px 0px' // Trigger slightly before fully out of view
+            });
+
+            // Start observing the stats section
+            observer.observe(statsSection);
+
+            // Update indicator based on scroll position
+            window.addEventListener('scroll', function() {
+                const rect = statsSection.getBoundingClientRect();
+                const windowHeight = window.innerHeight;
+
+                if (rect.top < windowHeight * 0.7 && rect.bottom > windowHeight * 0.3) {
+                    if (!isAnimating && indicator.textContent !== 'Section Status: Animating...' && indicator.textContent !== 'Section Status: Animation Complete') {
+                        indicator.textContent = 'Section Status: In View';
+                    }
+                } else {
+                    if (indicator.textContent !== 'Section Status: Reset' && indicator.textContent !== 'Section Status: Out of View') {
+                        indicator.textContent = 'Section Status: Out of View';
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

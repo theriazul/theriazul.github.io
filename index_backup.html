@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 	<!-- Favicon -->
@@ -141,249 +141,20 @@
 			transform: scale(1.1);
 		}
 
-								.consent-banner {
-									position: fixed;
-									bottom: 1rem;
-									left: 50%;
-									transform: translateX(-50%);
-									max-width: calc(100% - 2rem);
-									background: rgba(10, 20, 30, 0.95);
-									color: #d3f8ff;
-									padding: 0.9rem 1.2rem;
-									border: 1px solid rgba(120, 200, 255, 0.18);
-									border-radius: 999px;
-									box-shadow: 0 16px 50px rgba(0, 0, 0, 0.35);
-									display: flex;
-									align-items: center;
-									justify-content: space-between;
-									gap: 0.8rem;
-									z-index: 9999;
-									opacity: 0;
-									pointer-events: none;
-									transition: opacity 0.35s ease, transform 0.35s ease;
-								}
+		@media (max-width: 768px) {
+			#typing-animation {
+				font-size: 20px;
+			}
+			.about-mf .box-shadow-full {
+				padding-top: 2rem;
+				padding-bottom: 2rem;
+			}
+			.slider-item .text h1 {
+				font-size: 2rem;
+			}
+		}
+	</style>
 
-								.consent-banner.active {
-									opacity: 1;
-									pointer-events: auto;
-									transform: translateX(-50%) translateY(0);
-								}
-
-								.consent-banner span {
-									font-size: 0.95rem;
-									line-height: 1.4;
-									color: #c8f1ff;
-								}
-
-								.consent-dismiss {
-									background: rgba(255, 255, 255, 0.08);
-									border: 1px solid rgba(255, 255, 255, 0.18);
-									color: #e3f7ff;
-									padding: 0.65rem 1rem;
-									border-radius: 999px;
-									font-weight: 600;
-									cursor: pointer;
-								}
-
-								#fab-container {
-									position: fixed;
-									right: 1.3rem;
-									bottom: 1.3rem;
-									display: flex;
-									flex-direction: column;
-									align-items: center;
-									gap: 0.5rem;
-									z-index: 9999;
-								}
-
-								#fab {
-									width: 60px;
-									height: 60px;
-									border-radius: 50%;
-									border: none;
-									background: linear-gradient(135deg, #11d4ff 0%, #2b55ff 100%);
-									color: #020912;
-									font-size: 1.8rem;
-									cursor: pointer;
-									box-shadow: 0 18px 45px rgba(17, 212, 255, 0.25);
-									transition: transform 0.2s ease, box-shadow 0.2s ease;
-								}
-
-								#fab:hover {
-									transform: translateY(-2px);
-									box-shadow: 0 22px 55px rgba(17, 212, 255, 0.35);
-								}
-
-								#fab:active {
-									transform: none;
-									box-shadow: 0 18px 45px rgba(17, 212, 255, 0.25);
-									background: linear-gradient(135deg, #11d4ff 0%, #2b55ff 100%);
-								}
-
-								#fab:focus {
-									outline: none;
-								}
-
-								#fab-tooltip {
-									position: absolute;
-									top: -50px;
-									right: 0;
-									background: rgba(2, 10, 18, 0.94);
-									color: #a7f4ff;
-									padding: 0.55rem 0.95rem;
-									border-radius: 999px;
-									font-size: 0.86rem;
-									opacity: 0;
-									pointer-events: none;
-									transition: opacity 0.2s ease, transform 0.2s ease;
-								}
-
-								#fab-container:hover #fab-tooltip {
-									opacity: 1;
-									transform: translateY(-4px);
-								}
-
-								.info-panel {
-									position: fixed;
-									top: 1.5rem;
-									right: 1.5rem;
-									max-width: min(380px, calc(100vw - 2rem));
-									background: rgba(5, 10, 20, 0.92);
-									border: 1px solid rgba(10, 255, 220, 0.14);
-									border-radius: 1rem;
-									padding: 1rem;
-									box-shadow: 0 26px 70px rgba(0, 0, 0, 0.4);
-									display: none;
-									color: #d5f5ff;
-									z-index: 9998;
-								}
-
-								.info-panel.active {
-									display: block;
-								}
-
-								.info-panel dl {
-									margin: 0;
-								}
-
-								.info-panel dt {
-									font-weight: 700;
-									color: #9ef2ff;
-									margin-top: 0.7rem;
-								}
-
-								.info-panel dd {
-									margin: 0.25rem 0 0.9rem;
-									color: #d4f8ff;
-								}
-
-								.hacker-overlay {
-									position: fixed;
-									top: 0;
-									left: 0;
-									right: 0;
-									bottom: 0;
-									background: rgba(0,0,0,0.85);
-									backdrop-filter: blur(3px);
-									opacity: 0;
-									pointer-events: none;
-									transition: opacity 0.4s ease;
-									z-index: 5000;
-								}
-
-								.hacker-overlay.active {
-									opacity: 1;
-									pointer-events: auto;
-								}
-
-								.hacker-mask {
-									position: absolute;
-									top: 0;
-									left: 0;
-									right: 0;
-									bottom: 0;
-									background: radial-gradient(circle at top, rgba(0,255,220,0.12), transparent 30%),
-										linear-gradient(180deg, rgba(0, 0, 0, 0.15), rgba(0,0,0,0.7));
-								}
-
-								.hacker-content {
-									position: relative;
-									top: 15%;
-									max-width: 760px;
-									margin: 0 auto;
-									padding: 2rem 2.5rem;
-									text-align: center;
-									color: #cffdff;
-									z-index: 2;
-								}
-
-								.hacker-title {
-									font-size: clamp(2.6rem, 4vw, 4.2rem);
-									letter-spacing: 0.28rem;
-									text-transform: uppercase;
-									color: #9dfcff;
-									text-shadow: 0 0 18px rgba(0,255,230,0.65), 0 0 35px rgba(0,255,220,0.18);
-									margin-bottom: 1.2rem;
-								}
-
-								.terminal-panel {
-									display: grid;
-									gap: 0.35rem;
-									padding: 1.2rem 1.3rem;
-									background: rgba(0, 0, 0, 0.32);
-									border: 1px solid rgba(46, 190, 255, 0.22);
-									border-radius: 1rem;
-									box-shadow: inset 0 0 40px rgba(0,255,224,0.08);
-								}
-
-								.terminal-line {
-									font-family: 'Courier New', Courier, monospace;
-									font-size: 0.95rem;
-									color: #b8fffe;
-									opacity: 0.88;
-									animation: pulseText 1.6s infinite alternate;
-								}
-
-								.scan-lines {
-									position: absolute;
-									top: 0;
-									left: 0;
-									right: 0;
-									bottom: 0;
-									pointer-events: none;
-									background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px);
-									background-size: 100% 3px;
-									opacity: 0.45;
-									animation: scan 5s linear infinite;
-								}
-
-								.exit-btn {
-									margin-top: 1.5rem;
-									padding: 0.9rem 1.6rem;
-									border: 1px solid rgba(178, 255, 255, 0.35);
-									border-radius: 999px;
-									background: rgba(0, 0, 0, 0.28);
-									color: #dffbff;
-									font-size: 0.95rem;
-									cursor: pointer;
-									transition: transform 0.25s ease, background 0.25s ease;
-								}
-
-								.exit-btn:hover {
-									transform: translateY(-1px);
-									background: rgba(0,0,0,0.45);
-								}
-
-								@keyframes pulseText {
-									from {opacity: 0.7;}
-									to {opacity: 1;}
-								}
-
-								@keyframes scan {
-									0% {background-position: 0 0;}
-									100% {background-position: 0 100%;}
-								}
-			</style>
 
 </head>
 
@@ -1040,48 +811,22 @@
 		</div>
 	</footer>
 
-	<!-- Floating Action Button -->
-	<div id="fab-container">
-		<button id="fab" aria-label="Activate Hacker Mode">⚡</button>
-	</div>
-
-<!-- Consent Banner -->
-							<div id="consent-banner" class="consent-banner" aria-live="polite" aria-hidden="true">
-								<span>Hacker Mode collects basic system/browser info and approximate location for demo/analytics. No personal identifiers are stored.</span>
-								<button id="consent-dismiss" class="consent-dismiss">Got it</button>
-							</div>
-
-							<!-- Info Panel -->
-							<div id="info-panel" class="info-panel" aria-live="polite" aria-hidden="true">
-								<div class="info-header">
-									<h3>Collected device info</h3>
-								</div>
-								<div class="info-body" id="info-body">
-									<p>Ready to collect device information when Hacker Mode is activated.</p>
-								</div>
-								<div class="info-actions">
-									<button class="send-email" id="send-email-btn">Send via Email</button>
-									<button class="close-panel" id="close-panel-btn">Close</button>
-								</div>
-							</div>
-
-							<!-- Hacker Mode Overlay -->
-							<div id="hacker-overlay" class="hacker-overlay" aria-hidden="true">
-								<div class="hacker-mask"></div>
-								<div class="hacker-content">
-									<h1 class="hacker-title">HACKER MODE ACTIVATED</h1>
-									<div class="terminal-panel" id="terminal-panel">
-										<div class="terminal-line">SYSTEM BOOT SEQUENCE STARTED</div>
-										<div class="terminal-line">SECURE CHANNEL ESTABLISHED</div>
-										<div class="terminal-line">LOADING HACKER INTERFACE...</div>
-									</div>
+	<!-- Hacker Mode Overlay -->
+	<div id="hacker-overlay" class="hacker-overlay">
+		<div class="hacker-mask"></div>
+		<div class="hacker-content">
+			<h1 class="hacker-title">HACKER MODE ACTIVATED</h1>
+			<p class="hacker-text">Welcome to the matrix...</p>
 			<button id="exit-hacker" class="exit-btn">Exit Hacker Mode</button>
 		</div>
 		<div class="scan-lines"></div>
 	</div>
 
 	<!-- Hacker Sound -->
-	<audio id="hacker-sound" preload="auto"></audio>
+	<audio id="hacker-sound" preload="none">
+		<source src="https://www.soundjay.com/misc/sounds/digital-beep-03.mp3" type="audio/mpeg">
+		<!-- Fallback - Web Audio API will generate sound -->
+	</audio>
 
 
 	<script src="js/jquery.min.js"></script>
@@ -1099,6 +844,637 @@
 
 	<script src="js/main.js"></script>
 	<script src="js/hacker-mode.js"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+	<style>
+		/* Floating Action Button */
+		#fab {
+			position: fixed;
+			bottom: 20px;
+			right: 20px;
+			width: 56px;
+			height: 56px;
+			background: #00ff88;
+			color: #000;
+			border: none;
+			border-radius: 50%;
+			font-size: 24px;
+			cursor: pointer;
+			z-index: 1000;
+			box-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
+			transition: all 0.3s ease;
+			outline: none;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			animation: pulse 2s infinite;
+		}
+		#fab:hover {
+			transform: scale(1.1);
+			box-shadow: 0 0 25px rgba(0, 255, 136, 0.6);
+		}
+		#fab:active {
+			transform: scale(0.95);
+		}
+		@keyframes pulse {
+			0% { box-shadow: 0 0 15px rgba(0, 255, 136, 0.4); }
+			50% { box-shadow: 0 0 20px rgba(0, 255, 136, 0.5); }
+			100% { box-shadow: 0 0 15px rgba(0, 255, 136, 0.4); }
+		}
+
+		/* Tooltip */
+		#fab-tooltip {
+			position: absolute;
+			bottom: 70px;
+			right: 0;
+			background: rgba(0, 0, 0, 0.8);
+			color: white;
+			padding: 8px 12px;
+			border-radius: 6px;
+			font-size: 14px;
+			white-space: nowrap;
+			opacity: 0;
+			visibility: hidden;
+			transition: all 0.3s ease;
+			pointer-events: none;
+		}
+		#fab:hover #fab-tooltip {
+			opacity: 1;
+			visibility: visible;
+		}
+
+		/* Consent Modal */
+		#consent-modal {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: rgba(0, 0, 0, 0.8);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			z-index: 2000;
+			opacity: 0;
+			visibility: hidden;
+			transition: all 0.3s ease;
+		}
+		#consent-modal.active {
+			opacity: 1;
+			visibility: visible;
+		}
+		.modal-content {
+			background: #1a1a1a;
+			padding: 30px;
+			border-radius: 12px;
+			max-width: 500px;
+			width: 90%;
+			color: white;
+			text-align: center;
+			box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+		}
+		.modal-content h2 {
+			margin-bottom: 20px;
+			color: #00ff88;
+		}
+		.modal-content p {
+			margin-bottom: 30px;
+			line-height: 1.6;
+		}
+		.modal-buttons {
+			display: flex;
+			gap: 15px;
+			justify-content: center;
+		}
+		.modal-btn {
+			padding: 10px 20px;
+			border: none;
+			border-radius: 6px;
+			cursor: pointer;
+			font-size: 16px;
+			transition: all 0.3s ease;
+		}
+		.modal-btn.allow {
+			background: #00ff88;
+			color: #000;
+		}
+		.modal-btn.allow:hover {
+			background: #00cc66;
+		}
+		.modal-btn.cancel {
+			background: #666;
+			color: white;
+		}
+		.modal-btn.cancel:hover {
+			background: #555;
+		}
+
+		/* Info Panel */
+		#info-panel {
+			position: fixed;
+			bottom: 20px;
+			left: 20px;
+			background: rgba(0, 0, 0, 0.9);
+			padding: 20px;
+			border-radius: 12px;
+			max-width: 300px;
+			color: white;
+			z-index: 1500;
+			opacity: 0;
+			visibility: hidden;
+			transition: all 0.3s ease;
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+		}
+		#info-panel.active {
+			opacity: 1;
+			visibility: visible;
+		}
+		#info-panel h3 {
+			margin-bottom: 15px;
+			color: #00ff88;
+		}
+		#info-panel p {
+			margin: 5px 0;
+			font-size: 14px;
+		}
+		#info-panel .actions {
+			margin-top: 15px;
+			display: flex;
+			gap: 10px;
+		}
+		#info-panel button {
+			padding: 8px 12px;
+			border: none;
+			border-radius: 6px;
+			cursor: pointer;
+			font-size: 14px;
+			transition: all 0.3s ease;
+		}
+		#info-panel .send-email {
+			background: #00ff88;
+			color: #000;
+		}
+		#info-panel .send-email:hover {
+			background: #00cc66;
+		}
+		#info-panel .close-panel {
+			background: #666;
+			color: white;
+		}
+		#info-panel .close-panel:hover {
+			background: #555;
+		}
+
+		/* Hacker Overlay */
+		#hacker-overlay {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: rgba(0, 0, 0, 0.9);
+			z-index: 3000;
+			opacity: 0;
+			visibility: hidden;
+			transition: all 0.3s ease;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: #00ff88;
+			font-family: monospace;
+			font-size: 24px;
+		}
+		#hacker-overlay.active {
+			opacity: 1;
+			visibility: visible;
+		}
+		#hacker-overlay .content {
+			text-align: center;
+		}
+		#exit-hacker {
+			position: absolute;
+			top: 20px;
+			right: 20px;
+			background: #ff4444;
+			color: white;
+			border: none;
+			padding: 10px 15px;
+			border-radius: 6px;
+			cursor: pointer;
+			font-size: 16px;
+		}
+		#exit-hacker:hover {
+			background: #cc3333;
+		}
+
+		/* Mobile adjustments */
+		@media (max-width: 768px) {
+			#fab {
+				bottom: 15px;
+				right: 15px;
+				width: 50px;
+				height: 50px;
+				font-size: 20px;
+			}
+			#fab-tooltip {
+				right: -10px;
+			}
+			#info-panel {
+				bottom: 15px;
+				left: 15px;
+				max-width: 250px;
+			}
+		}
+	</style>
+
+	<!-- Hacker Overlay -->
+	<div id="hacker-overlay">
+		<div class="content">
+			<h1>HACKER MODE ACTIVATED</h1>
+			<p>Initializing system breach...</p>
+			<div id="glitch-text">ACCESS GRANTED</div>
+		</div>
+		<button id="exit-hacker">Exit</button>
+		<audio id="hacker-sound" preload="none"></audio>
+	</div>
+
+	<!-- Floating Action Button -->
+	<div id="fab-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
+		<div id="fab-tooltip">Activate Hacker Mode & Collect Info</div>
+		<button id="fab">⚡</button>
+	</div>
+
+	<!-- Consent Modal -->
+	<div id="consent-modal">
+		<div class="modal-content">
+			<h2>Data Collection Consent</h2>
+			<p>We would like to collect basic information about your device and network for analytics purposes. This includes:</p>
+			<ul style="text-align: left; display: inline-block;">
+				<li>Browser type and version</li>
+				<li>Operating system</li>
+				<li>Device type (mobile/desktop)</li>
+				<li>Approximate location via public IP address</li>
+			</ul>
+			<p>This data will be used to improve our services and will not be shared with third parties without your explicit consent.</p>
+			<div class="modal-buttons">
+				<button class="modal-btn allow" id="allow-btn">Allow</button>
+				<button class="modal-btn cancel" id="cancel-btn">Cancel</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- Info Panel -->
+	<div id="info-panel">
+		<h3>Collected Information</h3>
+		<div id="info-content">
+			<p>Loading...</p>
+		</div>
+		<div class="actions">
+			<button class="send-email" id="send-email-btn">Send via Email</button>
+			<button class="close-panel" id="close-panel-btn">Close</button>
+		</div
+			position: fixed;
+			bottom: 20px;
+			left: 20px;
+			background: rgba(0, 0, 0, 0.9);
+			padding: 20px;
+			border-radius: 12px;
+			max-width: 300px;
+			color: white;
+			z-index: 1500;
+			opacity: 0;
+			visibility: hidden;
+			transition: all 0.3s ease;
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+		}
+		#info-panel.active {
+			opacity: 1;
+			visibility: visible;
+		}
+		#info-panel h3 {
+			margin-bottom: 15px;
+			color: #00ff88;
+		}
+		#info-panel p {
+			margin: 5px 0;
+			font-size: 14px;
+		}
+		#info-panel .actions {
+			margin-top: 15px;
+			display: flex;
+			gap: 10px;
+		}
+		#info-panel button {
+			padding: 8px 12px;
+			border: none;
+			border-radius: 6px;
+			cursor: pointer;
+			font-size: 14px;
+			transition: all 0.3s ease;
+		}
+		#info-panel .send-email {
+			background: #00ff88;
+			color: #000;
+		}
+		#info-panel .send-email:hover {
+			background: #00cc66;
+		}
+		#info-panel .close-panel {
+			background: #666;
+			color: white;
+		}
+		#info-panel .close-panel:hover {
+			background: #555;
+		}
+
+		/* Hacker Overlay */
+		#hacker-overlay {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: rgba(0, 0, 0, 0.9);
+			z-index: 3000;
+			opacity: 0;
+			visibility: hidden;
+			transition: all 0.3s ease;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: #00ff88;
+			font-family: monospace;
+			font-size: 24px;
+		}
+		#hacker-overlay.active {
+			opacity: 1;
+			visibility: visible;
+		}
+		#hacker-overlay .content {
+			text-align: center;
+		}
+		#exit-hacker {
+			position: absolute;
+			top: 20px;
+			right: 20px;
+			background: #ff4444;
+			color: white;
+			border: none;
+			padding: 10px 15px;
+			border-radius: 6px;
+			cursor: pointer;
+			font-size: 16px;
+		}
+		#exit-hacker:hover {
+			background: #cc3333;
+		}
+
+		/* Mobile adjustments */
+		@media (max-width: 768px) {
+			#fab {
+				bottom: 15px;
+				right: 15px;
+				width: 50px;
+				height: 50px;
+				font-size: 20px;
+			}
+			#fab-tooltip {
+				right: -10px;
+			}
+			#info-panel {
+				bottom: 15px;
+				left: 15px;
+				max-width: 250px;
+			}
+		}
+	</style>
+
+	<!-- Hacker Overlay -->
+	<div id="hacker-overlay">
+		<div class="content">
+			<h1>HACKER MODE ACTIVATED</h1>
+			<p>Initializing system breach...</p>
+			<div id="glitch-text">ACCESS GRANTED</div>
+		</div>
+		<button id="exit-hacker">Exit</button>
+		<audio id="hacker-sound" preload="none"></audio>
+	</div>
+
+	<!-- Floating Action Button -->
+	<div id="fab-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
+		<div id="fab-tooltip">Activate Hacker Mode & Collect Info</div>
+		<button id="fab">⚡</button>
+	</div>
+
+	<!-- Consent Modal -->
+	<div id="consent-modal">
+		<div class="modal-content">
+			<h2>Data Collection Consent</h2>
+			<p>We would like to collect basic information about your device and network for analytics purposes. This includes:</p>
+			<ul style="text-align: left; display: inline-block;">
+				<li>Browser type and version</li>
+				<li>Operating system</li>
+				<li>Device type (mobile/desktop)</li>
+				<li>Approximate location via public IP address</li>
+			</ul>
+			<p>This data will be used to improve our services and will not be shared with third parties without your explicit consent.</p>
+			<div class="modal-buttons">
+				<button class="modal-btn allow" id="allow-btn">Allow</button>
+				<button class="modal-btn cancel" id="cancel-btn">Cancel</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- Info Panel -->
+	<div id="info-panel">
+		<h3>Collected Information</h3>
+		<div id="info-content">
+			<p>Loading...</p>
+		</div>
+		<div class="actions">
+			<button class="send-email" id="send-email-btn">Send via Email</button>
+			<button class="close-panel" id="close-panel-btn">Close</button>
+		</div>
+	</div>
+
+	<script>
+		// Floating Action Button functionality
+		document.addEventListener('DOMContentLoaded', function() {
+			const fab = document.getElementById('fab');
+			const consentModal = document.getElementById('consent-modal');
+			const allowBtn = document.getElementById('allow-btn');
+			const cancelBtn = document.getElementById('cancel-btn');
+			const infoPanel = document.getElementById('info-panel');
+			const sendEmailBtn = document.getElementById('send-email-btn');
+			const closePanelBtn = document.getElementById('close-panel-btn');
+			const exitHackerBtn = document.getElementById('exit-hacker');
+			const hackerOverlay = document.getElementById('hacker-overlay');
+
+			let collectedInfo = null;
+
+			// FAB click - show consent modal
+			fab.addEventListener('click', function() {
+				consentModal.classList.add('active');
+			});
+
+			// Cancel button
+			cancelBtn.addEventListener('click', function() {
+				consentModal.classList.remove('active');
+			});
+
+			// Allow button
+			allowBtn.addEventListener('click', async function() {
+				consentModal.classList.remove('active');
+				try {
+					// Collect info
+					collectedInfo = await collectUserInfo();
+					// Activate hacker mode
+					activateHackerMode();
+					// Display info
+					displayInfo(collectedInfo);
+				} catch (error) {
+					console.error('Error:', error);
+					alert('An error occurred. Please try again.');
+				}
+			});
+
+			// Send email
+			sendEmailBtn.addEventListener('click', function() {
+				if (collectedInfo) {
+					const subject = encodeURIComponent('Device Information from Portfolio Visitor');
+					const body = encodeURIComponent(`Collected Information:\n\nBrowser: ${collectedInfo.browser}\nOS: ${collectedInfo.os}\nDevice Type: ${collectedInfo.deviceType}\nIP: ${collectedInfo.ip}\nTimestamp: ${collectedInfo.timestamp}`);
+					window.location.href = `mailto:info.riazulislam99@gmail.com?subject=${subject}&body=${body}`;
+				}
+			});
+
+			// Close panel
+			closePanelBtn.addEventListener('click', function() {
+				infoPanel.classList.remove('active');
+			});
+
+			// Exit hacker mode
+			exitHackerBtn.addEventListener('click', function() {
+				hackerOverlay.classList.remove('active');
+				document.body.style.overflow = 'auto';
+				const hackerSound = document.getElementById('hacker-sound');
+				if (hackerSound) {
+					hackerSound.pause();
+					hackerSound.currentTime = 0;
+				}
+			});
+
+			// Modular functions
+			async function collectUserInfo() {
+				// Get IP
+				const ipResponse = await fetch('https://api.ipify.org?format=json');
+				const ipData = await ipResponse.json();
+				const ip = ipData.ip;
+
+				// Get device info
+				const ua = navigator.userAgent;
+				const isMobile = /Mobi|Android/i.test(ua);
+				const deviceType = isMobile ? 'Mobile' : 'Desktop';
+
+				// Detect browser
+				let browser = 'Unknown';
+				if (ua.includes('Chrome') && !ua.includes('Edg')) browser = 'Chrome';
+				else if (ua.includes('Firefox')) browser = 'Firefox';
+				else if (ua.includes('Safari') && !ua.includes('Chrome')) browser = 'Safari';
+				else if (ua.includes('Edg')) browser = 'Edge';
+				else if (ua.includes('Opera')) browser = 'Opera';
+
+				// Detect OS
+				let os = 'Unknown';
+				if (ua.includes('Windows')) os = 'Windows';
+				else if (ua.includes('Mac OS X')) os = 'macOS';
+				else if (ua.includes('Linux')) os = 'Linux';
+				else if (ua.includes('Android')) os = 'Android';
+				else if (ua.includes('iOS') || ua.includes('iPhone') || ua.includes('iPad')) os = 'iOS';
+
+				// Timestamp
+				const timestamp = new Date().toISOString();
+
+				return { ip, deviceType, browser, os, timestamp };
+			}
+
+			function activateHackerMode() {
+				hackerOverlay.classList.add('active');
+				document.body.style.overflow = 'hidden';
+
+				// Play sound
+				const hackerSound = document.getElementById('hacker-sound');
+				if (hackerSound) {
+					hackerSound.src = 'https://cdn.pixabay.com/download/audio/2021/08/27/audio_172902.mp3';
+					hackerSound.play().catch(() => {
+						// Fallback to generated sound
+						playGeneratedBell();
+					});
+				}
+
+				// Add glitch effects
+				addGlitchEffects();
+			}
+
+			function displayInfo(info) {
+				const content = document.getElementById('info-content');
+				content.innerHTML = `
+					<p><strong>Browser:</strong> ${info.browser}</p>
+					<p><strong>OS:</strong> ${info.os}</p>
+					<p><strong>Device Type:</strong> ${info.deviceType}</p>
+					<p><strong>IP:</strong> ${info.ip}</p>
+					<p><strong>Timestamp:</strong> ${info.timestamp}</p>
+				`;
+				infoPanel.classList.add('active');
+			}
+
+			function addGlitchEffects() {
+				const style = document.createElement('style');
+				style.textContent = `
+					@keyframes glitch {
+						0% { transform: translate(0); }
+						20% { transform: translate(-2px, 2px); }
+						40% { transform: translate(-2px, -2px); }
+						60% { transform: translate(2px, 2px); }
+						80% { transform: translate(2px, -2px); }
+						100% { transform: translate(0); }
+					}
+					body * {
+						animation: glitch 0.3s infinite;
+					}
+				`;
+				document.head.appendChild(style);
+			}
+
+			function playGeneratedBell() {
+				try {
+					const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+					const duration = 2.0;
+					const frequencies = [800, 1200, 1600, 2000, 2400];
+					const amplitudes = [1, 0.6, 0.4, 0.2, 0.1];
+
+					frequencies.forEach((freq, index) => {
+						const oscillator = audioContext.createOscillator();
+						const gainNode = audioContext.createGain();
+
+						oscillator.connect(gainNode);
+						gainNode.connect(audioContext.destination);
+
+						oscillator.frequency.setValueAtTime(freq, audioContext.currentTime);
+						oscillator.type = 'sine';
+
+						gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+						gainNode.gain.linearRampToValueAtTime(amplitudes[index] * 0.3, audioContext.currentTime + 0.01);
+						gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+
+						oscillator.start(audioContext.currentTime);
+						oscillator.stop(audioContext.currentTime + duration);
+					});
+				} catch (error) {
+					console.log('Web Audio API not supported');
+				}
+			}
+		});
+	</script>
 
 </body>
 
