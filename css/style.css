@@ -12818,6 +12818,8 @@ img,
   align-items: center;
   justify-content: center;
   animation: hackerFadeIn 0.5s ease-out;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 /* Hacker Mask Background */
@@ -13010,7 +13012,7 @@ img,
   font-size: 1.8rem;
   cursor: pointer;
   box-shadow: 0 0 18px rgba(40, 255, 40, 0.45), inset 0 0 8px rgba(255, 255, 255, 0.25);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease, opacity 0.3s ease;
 }
 
 #fab:hover {
@@ -13114,10 +13116,15 @@ img,
   display: none;
   z-index: 1100;
   font-family: 'Courier New', monospace;
+  opacity: 0;
+  transform: translateY(20px) scale(0.95);
+  transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
 #info-panel.active {
   display: block;
+  opacity: 1;
+  transform: translateY(0) scale(1);
 }
 
 .info-header h3 {
