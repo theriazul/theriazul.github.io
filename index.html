@@ -473,12 +473,12 @@
 			width: 100%;
 			height: 100%;
 			object-fit: cover;
-			filter: grayscale(90%) contrast(1.05) brightness(0.95);
+			filter: contrast(1.05) brightness(0.95);
 			transition: filter 0.3s ease;
 		}
 
 		.about-image-frame .about-img:hover img {
-			filter: grayscale(85%) contrast(1.1) brightness(1);
+			filter: contrast(1.1) brightness(1);
 		}
 
 		.about-image-frame .signature-wrap {
@@ -530,7 +530,7 @@
 			}
 			.about-image-frame .about-img {
 				border-radius: 0;
-				border-width: 1px;
+				border: 2px solid rgba(255, 255, 255, 0.3);
 			}
 			.about-image-frame .frame-label {
 				font-size: 0.5rem;
@@ -739,6 +739,463 @@
 				display: block;
 			}
 		}
+
+		/* Favicon / Logo Showcase Section */
+		.logo-showcase-section {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			width: 100%;
+			padding: clamp(2rem, 4vw, 3.5rem) 0 clamp(2.5rem, 5vw, 4rem);
+			background: transparent;
+		}
+
+		.logo-showcase-shell {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			width: 100%;
+		}
+
+		.logo-showcase-icon {
+			width: clamp(5rem, 12vw, 8rem);
+			height: auto;
+			max-width: 100%;
+			object-fit: contain;
+			transition: transform 0.35s ease, filter 0.35s ease;
+			will-change: transform, filter;
+			animation: floatLogo 10s ease-in-out infinite;
+		}
+
+		.logo-showcase-icon:hover {
+			transform: translateY(-4px) scale(1.04);
+			filter: brightness(1.08);
+		}
+
+		@keyframes floatLogo {
+			0%, 100% {
+				transform: translateY(0) scale(1);
+			}
+			50% {
+				transform: translateY(-4px) scale(1.01);
+			}
+		}
+
+		@media (max-width: 767.98px) {
+			.logo-showcase-section {
+				padding: clamp(1.5rem, 4vw, 2.5rem) 0 clamp(2rem, 6vw, 3rem);
+			}
+
+			.logo-showcase-icon {
+				width: clamp(4.2rem, 18vw, 6rem);
+			}
+		}
+
+		/*======================================
+//--//-->   RESUME BUTTON
+======================================*/
+
+		.resume-btn {
+			display: inline-flex;
+			align-items: center;
+			gap: 0.65rem;
+			padding: 0.95rem 1.6rem;
+			border-radius: 50px;
+			background: linear-gradient(135deg, rgba(255, 189, 57, 0.1), rgba(255, 140, 0, 0.1));
+			border: 1px solid rgba(190, 190, 190, 0.55);
+			color: #ffffff;
+			font-size: 0.95rem;
+			font-weight: 600;
+			letter-spacing: 0.02em;
+			text-decoration: none;
+			transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+			position: relative;
+			overflow: hidden;
+			box-shadow: 0 4px 18px rgba(255, 189, 57, 0.18);
+		}
+
+		.resume-btn::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: -100%;
+			width: 100%;
+			height: 100%;
+			background: linear-gradient(90deg, transparent, rgba(255, 189, 57, 0.1), transparent);
+			transition: left 0.5s ease;
+		}
+
+		.resume-btn:hover::before {
+			left: 100%;
+		}
+
+		.resume-btn:hover,
+		.resume-btn:focus-visible,
+		.resume-btn:active {
+			background: linear-gradient(135deg, rgba(255, 189, 57, 0.24), rgba(255, 140, 0, 0.24));
+			border-color: rgba(255, 189, 57, 0.65);
+			color: #ffffff;
+			transform: translateY(-2px);
+			box-shadow: 0 8px 25px rgba(255, 189, 57, 0.28);
+		}
+
+		.resume-btn:active {
+			transform: translateY(0);
+			box-shadow: 0 2px 10px rgba(255, 189, 57, 0.22);
+		}
+
+		.resume-icon {
+			width: 18px;
+			height: 18px;
+			flex-shrink: 0;
+			transition: transform 0.3s ease;
+		}
+
+		.resume-btn:hover .resume-icon {
+			transform: scale(1.1);
+		}
+
+		.resume-btn span {
+			font-weight: 500;
+			transition: all 0.3s ease;
+		}
+
+		/* Navbar-only smaller size on desktop */
+		.nav-tools .resume-btn {
+			padding: 0.7rem 1rem;
+			font-size: 0.85rem;
+		}
+
+		.nav-tools .resume-btn .resume-icon {
+			width: 15px;
+			height: 15px;
+		}
+
+		/* Responsive adjustments */
+		@media (max-width: 991.98px) {
+			.resume-btn {
+				padding: 0.85rem 1.3rem;
+				font-size: 0.9rem;
+			}
+		}
+
+		@media (max-width: 767.98px) {
+			.nav-tools .resume-btn {
+				display: none;
+			}
+		}
+
+		/* Dark / night theme adjustments */
+		body.dark-theme .resume-btn,
+		body.night-theme .resume-btn {
+			background: linear-gradient(135deg, rgba(255, 189, 57, 0.12), rgba(255, 140, 0, 0.12));
+			border-color: rgba(190, 190, 190, 0.55);
+			color: #ffffff;
+		}
+
+		body.dark-theme .resume-btn:hover,
+		body.night-theme .resume-btn:hover,
+		body.dark-theme .resume-btn:active,
+		body.night-theme .resume-btn:active,
+		body.dark-theme .resume-btn:focus-visible,
+		body.night-theme .resume-btn:focus-visible {
+			background: linear-gradient(135deg, rgba(255, 189, 57, 0.24), rgba(255, 140, 0, 0.24));
+			border-color: rgba(255, 189, 57, 0.65);
+			color: #ffffff;
+			box-shadow: 0 8px 25px rgba(255, 189, 57, 0.28);
+		}
+
+		/* Newsletter section styling */
+		.newsletter-section {
+			position: relative;
+			padding-top: 4rem;
+			padding-bottom: 4rem;
+			background: linear-gradient(180deg, #05060d 0%, #0b1021 100%);
+			overflow: hidden;
+			animation: newsletterFadeIn 0.9s ease-out 0.15s forwards;
+			opacity: 0;
+		}
+
+		.newsletter-section::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: radial-gradient(circle at top left, rgba(255, 220, 60, 0.06), transparent 25%),
+				 radial-gradient(circle at bottom right, rgba(255, 20, 147, 0.04), transparent 20%);
+			pointer-events: none;
+		}
+
+		.newsletter-bg-text {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			font-size: clamp(5rem, 10vw, 14rem);
+			font-weight: 900;
+			letter-spacing: 0.24em;
+			text-transform: uppercase;
+			color: rgba(255, 255, 255, 0.04);
+			white-space: nowrap;
+			pointer-events: none;
+			user-select: none;
+			z-index: 0;
+		}
+
+		.newsletter-section .heading-section,
+		.newsletter-form-wrapper {
+			position: relative;
+			z-index: 1;
+			padding-top: 2.2rem;
+			margin-bottom: 3rem;
+		}
+
+		.newsletter-heading {
+			font-size: 2rem;
+			font-weight: 800;
+			text-transform: uppercase;
+			color: #ffd633 !important;
+			margin-bottom: 1rem;
+			letter-spacing: 0.2em;
+		}
+
+		.newsletter-subtitle {
+			color: rgba(255, 255, 255, 0.78);
+			font-size: 1rem;
+			line-height: 1.8;
+			max-width: 28rem;
+			margin: 0 auto;
+		}
+
+		.newsletter-form {
+			width: 100%;
+		}
+
+		.newsletter-input-group {
+			display: flex;
+			align-items: center;
+			gap: 0.5rem;
+			width: 100%;
+			padding: 0;
+			min-height: auto;
+			border-radius: 0;
+			background: transparent;
+			backdrop-filter: none;
+			-webkit-backdrop-filter: none;
+			box-shadow: none;
+			border: none;
+			transition: none;
+		}
+
+		.newsletter-input-group:focus-within {
+			transform: none;
+			box-shadow: none;
+		}
+
+		.newsletter-input {
+			flex: 1 1 auto;
+			min-width: 0;
+			background: #ffffff;
+			border: none;
+			color: #333333;
+			font-size: 1rem;
+			font-weight: 400;
+			letter-spacing: 0.01em;
+			outline: none;
+			height: 48px;
+			padding: 0 1.1rem;
+			border-radius: 24px;
+			box-shadow: none;
+			transition: background 0.2s ease;
+		}
+
+		.newsletter-input:focus {
+			background: #ffffff;
+			box-shadow: none;
+			outline: none;
+		}
+
+		.newsletter-input::placeholder {
+			color: #999999;
+		}
+
+		.newsletter-btn {
+			flex-shrink: 0;
+			min-width: 48px;
+			width: 48px;
+			height: 48px;
+			aspect-ratio: 1/1;
+			padding: 0;
+			border-radius: 50%;
+			border: none;
+			background: #333333;
+			color: #ffffff;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			cursor: pointer;
+			position: relative;
+			overflow: hidden;
+			box-shadow: none;
+			transition: background 0.2s ease, transform 0.2s ease;
+		}
+
+		.newsletter-btn::before {
+			display: none;
+		}
+
+		.newsletter-btn:hover {
+			transform: scale(1.05);
+			background: #222222;
+			box-shadow: none;
+			filter: none;
+		}
+
+		.newsletter-btn:hover::before {
+			display: none;
+		}
+
+		.newsletter-btn:active {
+			transform: scale(0.98);
+			background: #444444;
+			box-shadow: none;
+		}
+
+		.newsletter-icon {
+			width: 20px;
+			height: 20px;
+			transition: transform 0.35s ease;
+		}
+
+		.newsletter-btn.launch .newsletter-icon {
+			transform: translateX(6px) translateY(-3px) scale(1.1);
+		}
+
+		.newsletter-status-message {
+			position: absolute;
+			top: 0;
+			left: 50%;
+			transform: translate(-50%, -130%);
+			padding: 0.45rem 1.05rem;
+			max-width: 340px;
+			width: min(100%, 340px);
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			text-align: center;
+			opacity: 0;
+			transform-origin: center bottom;
+			transition: opacity 0.35s ease, transform 0.35s ease;
+			pointer-events: none;
+			font-weight: 600;
+			letter-spacing: 0.01em;
+			color: #ffffff;
+			text-shadow: 0 0 18px rgba(255, 255, 255, 0.1);
+		}
+
+		.newsletter-status-message.show {
+			opacity: 1;
+			transform: translate(-50%, -100%);
+		}
+
+		.newsletter-status-message.success {
+			color: #fff;
+			background: rgba(255, 255, 255, 0.05);
+			box-shadow: 0 16px 40px rgba(255, 215, 90, 0.12);
+			border-radius: 999px;
+		}
+
+		.newsletter-status-message.error {
+			color: #ffd4d4;
+			background: rgba(255, 255, 255, 0.04);
+			box-shadow: 0 16px 40px rgba(255, 50, 120, 0.1);
+			border-radius: 999px;
+		}
+
+		@keyframes newsletterFadeIn {
+			from {
+				opacity: 0;
+				transform: translateY(24px);
+			}
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+
+		@media (max-width: 991.98px) {
+			.newsletter-section {
+				padding-top: 3rem;
+				padding-bottom: 3rem;
+			}
+
+			.newsletter-input-group {
+				gap: 0.45rem;
+			}
+
+			.newsletter-input {
+				font-size: 0.95rem;
+				height: 46px;
+				padding: 0 1rem;
+				border-radius: 23px;
+			}
+
+			.newsletter-btn {
+				width: 46px;
+				height: 46px;
+				min-width: 46px;
+			}
+		}
+
+		@media (max-width: 767.98px) {
+			.newsletter-input-group {
+				flex-wrap: nowrap;
+				gap: 0.4rem;
+			}
+
+			.newsletter-input {
+				font-size: 0.9rem;
+				height: 44px;
+				padding: 0 0.95rem;
+				border-radius: 22px;
+			}
+
+			.newsletter-btn {
+				width: 44px;
+				height: 44px;
+				min-width: 44px;
+			}
+		}
+
+		@media (max-width: 575.98px) {
+			.newsletter-input-group {
+				padding: 0;
+			}
+
+			.newsletter-heading {
+				font-size: 1.5rem;
+			}
+
+			.newsletter-subtitle {
+				font-size: 0.9rem;
+			}
+
+			.newsletter-input {
+				font-size: 0.85rem;
+				height: 42px;
+				padding: 0 0.9rem;
+				border-radius: 21px;
+			}
+
+			.newsletter-btn {
+				width: 42px;
+				height: 42px;
+				min-width: 42px;
+			}
+		}
+
 	</style>
 
 <body>
@@ -770,11 +1227,20 @@
 						<path fill-rule="evenodd" clip-rule="evenodd" d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" fill="currentColor"/>
 					</svg>
 				</button>
-				<div class="status-pill"><span></span>Available</div>
+				<a href="resume.pdf" download="Riazul_Islam_Tusar_Resume.pdf" class="resume-btn" aria-label="Download Resume">
+					<svg class="resume-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path d="M14 2H6C4.9 2 4.01 2.9 4.01 4L4 20C4 21.1 4.89 22 5.99 22H18C19.1 22 20 21.1 20 20V8L14 2ZM16 18H8V16H16V18ZM16 14H8V12H16V14ZM13 9V3.5L18.5 9H13Z" fill="currentColor"/>
+					</svg>
+					<span>Resume</span>
+				</a>
 				<button id="nav-toggle" class="nav-toggle" aria-controls="mobile-menu" aria-label="Open menu" aria-expanded="false" type="button">
-					<span></span>
-					<span></span>
-					<span></span>
+					<svg class="menu-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<g class="fries-container">
+							<rect class="fries fries-1" x="4" y="4" width="16" height="3" rx="1.5" fill="currentColor"/>
+							<rect class="fries fries-2" x="4" y="10.5" width="16" height="3" rx="1.5" fill="currentColor"/>
+							<rect class="fries fries-3" x="4" y="17" width="16" height="3" rx="1.5" fill="currentColor"/>
+						</g>
+					</svg>
 				</button>
 			</div>
 		</div>
@@ -1240,8 +1706,12 @@
 
 			<div class="row justify-content-center mt-5">
 				<div class="col-md-6 text-center ftco-animate">
-					<p><a href="https://drive.google.com/file/d/1mbtjVCSapzOs2v1uxG3gtbBAGVkCFaQd/view?usp=drive_link"
-							class="btn btn-primary py-4 px-5">Download CV</a></p>
+					<p><a href="resume.pdf" download="Riazul_Islam_Tusar_Resume.pdf" class="resume-btn" aria-label="Download CV">
+						<svg class="resume-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path d="M14 2H6C4.9 2 4.01 2.9 4.01 4L4 20C4 21.1 4.89 22 5.99 22H18C19.1 22 20 21.1 20 20V8L14 2ZM16 18H8V16H16V18ZM16 14H8V12H16V14ZM13 9V3.5L18.5 9H13Z" fill="currentColor"/>
+						</svg>
+						<span>Resume</span>
+					</a></p>
 				</div>
 			</div>
 		</div>
@@ -1486,6 +1956,14 @@
 
 
 
+	<section class="logo-showcase-section" aria-label="Portfolio logo showcase">
+		<div class="logo-showcase-shell">
+			<img src="images/about.png" alt="Portfolio favicon logo" class="logo-showcase-icon">
+		</div>
+	</section>
+
+
+
 	<section class="ftco-section contact-section ftco-no-pb spacing-lg" id="contact-section">
 		<div class="container">
 			<div class="row justify-content-center mb-5 pb-3">
@@ -1565,6 +2043,35 @@
 					<br>
 				</div>
 			</div>
+	</section>
+
+	<section class="ftco-section newsletter-section ftco-no-pb spacing-lg" id="newsletter-section">
+		<div class="container">
+			<div class="newsletter-bg-text" aria-hidden="true">NewsLetter</div>
+			<div class="row justify-content-center mb-4 pb-2">
+				<div class="col-md-7 heading-section text-center ftco-animate">
+					<h2 class="newsletter-heading">STAY UPDATED</h2>
+					<p class="newsletter-subtitle">Enter your email and get notified about news and updates.</p>
+				</div>
+			</div>
+			<div class="row justify-content-center">
+				<div class="col-lg-10 col-md-10 ftco-animate">
+					<div class="newsletter-form-wrapper">
+						<form class="newsletter-form" id="newsletterForm" novalidate>
+							<div class="newsletter-input-group">
+								<input type="email" id="newsletterEmail" class="newsletter-input" placeholder="Your email address" required aria-label="Your email address">
+								<button type="submit" class="newsletter-btn" id="newsletterSubmit" aria-label="Subscribe">
+									<svg class="newsletter-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<path d="M2 12L22 2L15 22L11 13L2 12Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+									</svg>
+								</button>
+							</div>
+							<div class="newsletter-status-message" id="newsletterStatus" aria-live="polite"></div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
 	</section>
 
 
