@@ -392,7 +392,7 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('DOMContentLoaded', () => {
   // ===== CONFIGURATION =====
   // Google Apps Script Web App URL for newsletter submissions
-  const scriptURL = 'https://script.google.com/macros/s/AKfycbxCffF4fx7hKJUWkcnVURr3wkDfp5S8-ESIh7LE2FwH4laln38pOdIR00yRVIUZO5oV/exec';
+  const scriptURL = 'https://script.google.com/macros/s/AKfycbzPFjbW5EXH3-oX2HTRLyoKLLiBJ9CbzmU36slaVtets2hwsY3x7WpQnTCeH7V9Y8Fd/exec';
 
   // ===== DOM ELEMENTS =====
   const form = document.getElementById('newsletterForm');
@@ -452,54 +452,18 @@ document.addEventListener('DOMContentLoaded', () => {
    */
   const validateEmail = (value) => emailPattern.test(value.trim());
 
-  /**
-   * Submit email to backend
-   */
-  const submitEmail = async (email) => {
-    console.log('[Newsletter] Submitting to:', scriptURL);
-    console.log('[Newsletter] Payload:', { email });
-
-    const response = await fetch(scriptURL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email }),
-      mode: 'cors',
-      cache: 'no-cache',
-    });
-
-    const responseText = await response.text();
-    console.log('[Newsletter] Response status:', response.status);
-    console.log('[Newsletter] Response body:', responseText);
-
-    let result = null;
-    try {
-      result = JSON.parse(responseText);
-      console.log('[Newsletter] Parsed result:', result);
-    } catch (parseError) {
-      console.warn('[Newsletter] JSON parse error:', parseError);
-    }
-
-    if (!response.ok) {
-      const message = result?.message || `HTTP ${response.status}`;
-      throw new Error(message);
-    }
-
-    if (!result) {
-      throw new Error('Invalid response format');
-    }
-
-    return result;
-  };
-
   // ===== ELEMENT VALIDATION =====
   if (!form || !emailInput || !submitBtn || !statusMessage) {
     console.warn('[Newsletter] Required elements not found');
     return;
   }
 
+  console.log('[Newsletter] DOM loaded. Newsletter form handler attached.');
+
   // ===== FORM HANDLER =====
-  form.addEventListener('submit', async (event) => {
-    event.preventDefault();
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    console.log('Submitting form');
 
     if (isSubmitting) {
       console.warn('[Newsletter] Submission already in progress');
@@ -507,24 +471,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     clearStatus();
+    const email = emailInput.value.trim();
+    console.log('Email:', email);
 
-    const emailValue = emailInput.value.trim();
-
-    // Validate empty input
-    if (!emailValue) {
+    if (!email) {
       showStatus('Please enter your email address.', 'error');
       emailInput.focus();
       return;
     }
 
-    // Validate email format
-    if (!validateEmail(emailValue)) {
+    if (!validateEmail(email)) {
       showStatus('Please enter a valid email address.', 'error');
       emailInput.focus();
       return;
     }
 
-    // Start submission
     isSubmitting = true;
     submitBtn.disabled = true;
     submitBtn.setAttribute('aria-busy', 'true');
@@ -532,18 +493,44 @@ document.addEventListener('DOMContentLoaded', () => {
     showStatus('Submitting…');
 
     try {
-      const result = await submitEmail(emailValue);
+      const response = await fetch(scriptURL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'text/plain;charset=utf-8',
+        },
+        body: JSON.stringify({ email }),
+        mode: 'cors',
+        cache: 'no-cache',
+      });
 
-      if (result.success) {
-        showStatus('✓ Successfully subscribed!', 'success');
-        form.reset();
-        emailInput.focus();
-      } else {
-        showStatus(result.message || 'Subscription failed.', 'error');
-        emailInput.focus();
+      console.log('Response received');
+      console.log('[Newsletter] Response status:', response.status);
+
+      const text = await response.text();
+      console.log('Server response:', text);
+
+      let result = null;
+      try {
+        result = JSON.parse(text);
+        console.log('[Newsletter] Parsed response JSON:', result);
+      } catch (jsonError) {
+        console.error('[Newsletter] JSON parse failed:', jsonError);
+        throw new Error('Unable to parse server response.');
       }
+
+      if (!response.ok) {
+        throw new Error(result.error || result.message || `HTTP ${response.status}`);
+      }
+
+      if (!result.success) {
+        throw new Error(result.error || 'Subscription failed.');
+      }
+
+      showStatus('✓ Successfully subscribed!', 'success');
+      form.reset();
+      emailInput.focus();
     } catch (error) {
-      console.error('[Newsletter] Submission error:', error);
+      console.error('FULL ERROR:', error);
       showStatus(error.message || 'Connection failed. Please try again.', 'error');
       emailInput.focus();
     } finally {

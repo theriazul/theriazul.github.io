@@ -9,40 +9,45 @@ function doGet(e) {
 }
 
 function doOptions(e) {
-  return createCORSResponse({ success: true, message: "OK" });
+  return createCORSResponse({
+    success: true,
+    message: "Options OK",
+  });
 }
 
 function doPost(e) {
   try {
-    console.log("doPost called", {
-      postDataType: e.postData ? e.postData.type : null,
-      postDataContents: e.postData ? e.postData.contents : null,
-      parameters: e.parameter,
-    });
+    Logger.log("doPost called");
+    Logger.log("postData type: " + (e.postData ? e.postData.type : "none"));
+    Logger.log(
+      "postData contents: " + (e.postData ? e.postData.contents : "none"),
+    );
+    Logger.log("request parameters: " + JSON.stringify(e.parameter || {}));
 
     if (!SPREADSHEET_ID || SPREADSHEET_ID.includes("REPLACE_WITH")) {
       return createCORSResponse({
         success: false,
-        message: "Google Spreadsheet ID is not configured in Apps Script.",
+        error: "Google Spreadsheet ID is not configured in Apps Script.",
       });
     }
 
-    const payload = parseRequestBody(e);
-    const email = (payload.email || "").toString().trim();
+    const data = parseRequestBody(e);
+    const email = (data.email || "").toString().trim();
 
     if (!email) {
       return createCORSResponse({
         success: false,
-        message: "Email is required",
+        error: "Email is required",
       });
     }
 
-    const spreadsheet = SpreadsheetApp.openById(SPREADSHEET_ID);
-    const sheet = spreadsheet.getSheetByName(SHEET_NAME);
+    const sheet =
+      SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(SHEET_NAME);
+
     if (!sheet) {
       return createCORSResponse({
         success: false,
-        message: `Sheet not found: ${SHEET_NAME}`,
+        error: "Sheet not found: " + SHEET_NAME,
       });
     }
 
@@ -53,10 +58,10 @@ function doPost(e) {
       message: "Email saved successfully",
     });
   } catch (error) {
-    console.error("doPost error:", error);
+    Logger.log("doPost error: " + error.toString());
     return createCORSResponse({
       success: false,
-      message: "Internal server error: " + (error.message || "Unknown error"),
+      error: error.toString(),
     });
   }
 }
@@ -65,19 +70,15 @@ function parseRequestBody(e) {
   try {
     if (e.postData && e.postData.contents) {
       const contentType = (e.postData.type || "").toLowerCase();
-      if (contentType.includes("application/json")) {
+      Logger.log("Detected content type: " + contentType);
+      if (
+        contentType.includes("application/json") ||
+        contentType.includes("text/plain")
+      ) {
         return JSON.parse(e.postData.contents);
       }
       if (contentType.includes("application/x-www-form-urlencoded")) {
-        const parsed = Utilities.parseQueryString(e.postData.contents);
-        const result = {};
-        for (const key in parsed) {
-          if (parsed.hasOwnProperty(key)) {
-            result[key] =
-              parsed[key] && parsed[key].length ? parsed[key][0] : "";
-          }
-        }
-        return result;
+        return parseUrlEncodedBody(e.postData.contents);
       }
     }
 
@@ -85,9 +86,21 @@ function parseRequestBody(e) {
       return { email: e.parameter.email };
     }
   } catch (error) {
-    console.error("Failed to parse request body:", error);
+    Logger.log("parseRequestBody error: " + error.toString());
   }
+
   return {};
+}
+
+function parseUrlEncodedBody(contents) {
+  const parsed = Utilities.parseQueryString(contents);
+  const result = {};
+  for (const key in parsed) {
+    if (Object.prototype.hasOwnProperty.call(parsed, key)) {
+      result[key] = Array.isArray(parsed[key]) ? parsed[key][0] : parsed[key];
+    }
+  }
+  return result;
 }
 
 function createCORSResponse(payload) {
