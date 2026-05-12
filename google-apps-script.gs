@@ -1,10 +1,18 @@
-const SPREADSHEET_ID = "REPLACE_WITH_YOUR_SHEET_ID_HERE";
+const SPREADSHEET_ID = ""; // Optional: set your spreadsheet ID if this is a standalone web app.
 const SHEET_NAME = "Sheet1";
 
 function doGet(e) {
+  const spreadsheet = getTargetSpreadsheet();
+  const sheet = spreadsheet
+    ? spreadsheet.getSheetByName(SHEET_NAME) || spreadsheet.getSheets()[0]
+    : null;
+
   return createCORSResponse({
     success: true,
     message: "Newsletter endpoint is live",
+    spreadsheetId: spreadsheet ? spreadsheet.getId() : "No spreadsheet found",
+    sheetName: sheet ? sheet.getName() : "No sheet found",
+    lastRow: sheet ? sheet.getLastRow() : 0,
   });
 }
 
@@ -24,13 +32,6 @@ function doPost(e) {
     );
     Logger.log("request parameters: " + JSON.stringify(e.parameter || {}));
 
-    if (!SPREADSHEET_ID || SPREADSHEET_ID.includes("REPLACE_WITH")) {
-      return createCORSResponse({
-        success: false,
-        error: "Google Spreadsheet ID is not configured in Apps Script.",
-      });
-    }
-
     const data = parseRequestBody(e);
     const email = (data.email || "").toString().trim();
 
@@ -41,21 +42,45 @@ function doPost(e) {
       });
     }
 
-    const sheet =
-      SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(SHEET_NAME);
+    const spreadsheet = getTargetSpreadsheet();
+    if (!spreadsheet) {
+      return createCORSResponse({
+        success: false,
+        error:
+          "Unable to open spreadsheet. Set SPREADSHEET_ID or bind the script to the target spreadsheet.",
+      });
+    }
+
+    let sheet = spreadsheet.getSheetByName(SHEET_NAME);
+    if (!sheet) {
+      Logger.log("Sheet not found by name: " + SHEET_NAME);
+      const sheets = spreadsheet.getSheets();
+      if (sheets.length > 0) {
+        sheet = sheets[0];
+        Logger.log("Falling back to first sheet: " + sheet.getName());
+      }
+    }
 
     if (!sheet) {
       return createCORSResponse({
         success: false,
-        error: "Sheet not found: " + SHEET_NAME,
+        error: "No sheets available in spreadsheet.",
       });
     }
 
     sheet.appendRow([email, new Date()]);
+    Logger.log("Appended email row to sheet: " + sheet.getName());
+
+    // Get the last row number to confirm storage
+    const lastRow = sheet.getLastRow();
+    Logger.log("Last row in sheet: " + lastRow);
 
     return createCORSResponse({
       success: true,
       message: "Email saved successfully",
+      spreadsheetId: spreadsheet.getId(),
+      sheetName: sheet.getName(),
+      lastRow: lastRow,
     });
   } catch (error) {
     Logger.log("doPost error: " + error.toString());
@@ -101,6 +126,16 @@ function parseUrlEncodedBody(contents) {
     }
   }
   return result;
+}
+
+function getTargetSpreadsheet() {
+  if (SPREADSHEET_ID && !SPREADSHEET_ID.includes("REPLACE_WITH")) {
+    Logger.log("Opening spreadsheet by ID: " + SPREADSHEET_ID);
+    return SpreadsheetApp.openById(SPREADSHEET_ID);
+  }
+
+  Logger.log("Opening active spreadsheet for bound script");
+  return SpreadsheetApp.getActiveSpreadsheet();
 }
 
 function createCORSResponse(payload) {

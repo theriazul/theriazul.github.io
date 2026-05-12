@@ -392,7 +392,8 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('DOMContentLoaded', () => {
   // ===== CONFIGURATION =====
   // Google Apps Script Web App URL for newsletter submissions
-  const scriptURL = 'https://script.google.com/macros/s/AKfycbzPFjbW5EXH3-oX2HTRLyoKLLiBJ9CbzmU36slaVtets2hwsY3x7WpQnTCeH7V9Y8Fd/exec';
+  const scriptURL = 'https://script.google.com/macros/s/AKfycbxz_EpY31kHGXAg8BsymBJyPjctdl5QfqYI14vZvhi-Rgna7h3cOJETWChHB_N4quivfw/exec';
+  // Make sure this matches the web app deployment URL shown in Apps Script > Deploy > New deployment.
 
   // ===== DOM ELEMENTS =====
   const form = document.getElementById('newsletterForm');
@@ -459,6 +460,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   console.log('[Newsletter] DOM loaded. Newsletter form handler attached.');
+  console.log('[Newsletter] Using web app URL:', scriptURL);
 
   // ===== FORM HANDLER =====
   form.addEventListener('submit', async (e) => {
@@ -497,6 +499,7 @@ document.addEventListener('DOMContentLoaded', () => {
         method: 'POST',
         headers: {
           'Content-Type': 'text/plain;charset=utf-8',
+          'Accept': 'application/json',
         },
         body: JSON.stringify({ email }),
         mode: 'cors',
@@ -513,6 +516,14 @@ document.addEventListener('DOMContentLoaded', () => {
       try {
         result = JSON.parse(text);
         console.log('[Newsletter] Parsed response JSON:', result);
+        if (result.spreadsheetId || result.sheetName) {
+          console.log(
+            '[Newsletter] Stored to spreadsheet:',
+            result.spreadsheetId,
+            'sheet:',
+            result.sheetName,
+          );
+        }
       } catch (jsonError) {
         console.error('[Newsletter] JSON parse failed:', jsonError);
         throw new Error('Unable to parse server response.');
@@ -525,6 +536,9 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!result.success) {
         throw new Error(result.error || 'Subscription failed.');
       }
+
+      // Show debug info in console and optionally in UI
+      console.log('[Newsletter] Success! Stored to:', result.spreadsheetId, 'sheet:', result.sheetName, 'row:', result.lastRow);
 
       showStatus('✓ Successfully subscribed!', 'success');
       form.reset();

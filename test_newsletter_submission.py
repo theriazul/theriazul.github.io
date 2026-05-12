@@ -1,8 +1,12 @@
 import json
+import os
 import urllib.request
 import urllib.error
 
-script_url = 'https://script.google.com/macros/s/AKfycby05HCXWtZxaVsJFlm023p9ZfBAx0Ugq9M7Fa8xick_kih1tY8BD2hd5272ujxH-g1Q/exec'
+script_url = os.getenv(
+    'NEWSLETTER_SCRIPT_URL',
+    'https://script.google.com/macros/s/AKfycbxz_EpY31kHGXAg8BsymBJyPjctdl5QfqYI14vZvhi-Rgna7h3cOJETWChHB_N4quivfw/exec',
+)
 
 test_payload = {'email': 'test@gmail.com'}
 
@@ -11,7 +15,7 @@ request = urllib.request.Request(
     data=json.dumps(test_payload).encode('utf-8'),
     method='POST',
     headers={
-        'Content-Type': 'text/plain;charset=utf-8',
+        'Content-Type': 'application/json;charset=utf-8',
         'Accept': 'application/json',
     }
 )
@@ -35,3 +39,16 @@ except urllib.error.HTTPError as http_error:
     print('Body:', http_error.read().decode('utf-8'))
 except Exception as exc:
     print('Error:', exc)
+
+# Also test GET request to check spreadsheet info
+print('\n--- Testing GET request ---')
+try:
+    get_request = urllib.request.Request(script_url, method='GET')
+    with urllib.request.urlopen(get_request, timeout=20) as response:
+        body = response.read().decode('utf-8')
+        print('GET Status:', response.status)
+        print('GET Body:', body)
+        parsed = json.loads(body)
+        print('GET Parsed:', parsed)
+except Exception as e:
+    print('GET Error:', type(e).__name__, e)
