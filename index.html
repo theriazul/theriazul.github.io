@@ -219,29 +219,64 @@
 		}
 
 		/* Modern Footer Styles */
-		.footer-content {
+		.footer-grid {
+			display: flex;
+			flex-direction: column;
+			gap: 2.5rem;
+			padding: 2rem 0 1rem;
+		}
+
+		.footer-row {
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
-			font-family: 'IBM Plex Mono', monospace;
-			font-size: 0.875rem;
-			letter-spacing: 0.05em;
-			color: #a0a0a0;
+			gap: 1rem;
+			flex-wrap: wrap;
+		}
+
+		.footer-top {
+			justify-content: space-between;
+		}
+
+		.footer-bottom {
+			justify-content: center;
+		}
+
+		.footer-left,
+		.footer-right {
+			flex: 1;
+			min-width: 220px;
+		}
+
+		.footer-center {
+			flex: 0 1 auto;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			width: 100%;
 		}
 
 		.footer-left {
-			flex: 1;
+			text-align: left;
 		}
 
 		.footer-right {
-			flex: 1;
 			text-align: right;
 		}
 
-		.footer-copyright,
+		.footer-copy,
 		.footer-location {
 			margin: 0;
 			font-weight: 400;
+			font-family: 'IBM Plex Mono', monospace;
+			color: rgba(255, 255, 255, 0.85);
+		}
+
+		.footer-location {
+			display: inline-flex;
+			align-items: center;
+			justify-content: flex-end;
+			gap: 0.5rem;
 		}
 
 		.status-dot {
@@ -267,22 +302,108 @@
 			}
 		}
 
+		.visitor-stats-bar {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			gap: 1.4rem;
+			padding: 0;
+			background: transparent;
+			border: none;
+			border-radius: 0;
+			box-shadow: none;
+			color: #ffffff;
+			text-shadow: 0 0 14px rgba(255, 255, 255, 0.08);
+		}
+
+		.visitor-stats-label {
+			font-size: 0.75rem;
+			font-weight: 700;
+			letter-spacing: 0.24em;
+			text-transform: uppercase;
+			color: #ffffff;
+		}
+
+		.visitor-stat-item {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 0.1rem;
+			padding: 0;
+			background: transparent;
+		}
+
+		.visitor-stats-separator {
+			color: rgba(255, 255, 255, 0.6);
+			font-size: 1rem;
+			line-height: 1;
+		}
+
+		.visitor-stat-title {
+			font-size: 0.78rem;
+			font-weight: 600;
+			color: rgba(255, 255, 255, 0.92);
+			letter-spacing: 0.05em;
+		}
+
+		.visitor-stat-number {
+			font-size: clamp(1.4rem, 2vw, 2rem);
+			font-weight: 700;
+			color: #ffffff;
+			line-height: 1.05;
+		}
+
+		@media (max-width: 991.98px) {
+			.footer-grid {
+				gap: 2rem;
+			}
+		}
+
 		@media (max-width: 767.98px) {
-			.footer-content {
+			.footer-grid {
 				flex-direction: column;
-				gap: 1rem;
+				align-items: center;
 				text-align: center;
+			}
+
+			.footer-row {
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+			}
+
+			.footer-left,
+			.footer-right,
+			.footer-center {
+				width: 100%;
+				max-width: 680px;
 			}
 
 			.footer-left,
 			.footer-right {
-				flex: none;
+				text-align: center;
 			}
-		}
 
-		body.dark-theme .footer-copyright,
-		body.dark-theme .footer-location {
-			color: #c0c0c0;
+			.footer-center {
+				order: -1;
+			}
+
+			.visitor-stats-bar {
+				transform: translateY(0);
+				margin-bottom: 1rem;
+				width: 100%;
+				max-width: 520px;
+				gap: 1.2rem;
+			}
+
+			.visitor-stats-label {
+				font-size: 0.7rem;
+				letter-spacing: 0.2em;
+			}
+
+			.footer-location {
+				justify-content: center;
+			}
 		}
 
 		/* LinkedIn Icon Button Styling */
@@ -337,6 +458,102 @@
 		body.dark-theme .btn-icon-linkedin:hover {
 			color: #5aabff;
 			filter: drop-shadow(0 4px 8px rgba(74, 158, 255, 0.3));
+		}
+
+		/* Scroll progress button */
+		#scroll-progress {
+			position: fixed;
+			right: 1.7rem;
+			bottom: 2.6rem;
+			width: 66px;
+			height: 66px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			border-radius: 50%;
+			background: rgba(8, 12, 20, 0.62);
+			backdrop-filter: blur(18px);
+			-webkit-backdrop-filter: blur(18px);
+			border: 1px solid rgba(255, 255, 255, 0.08);
+			box-shadow: 0 24px 50px rgba(0, 0, 0, 0.24);
+			cursor: pointer;
+			opacity: 0;
+			visibility: hidden;
+			transform: scale(0.86);
+			transition: opacity 0.28s ease, transform 0.28s ease, visibility 0.28s ease;
+			z-index: 9999;
+		}
+
+		#scroll-progress.show-scroll-progress {
+			opacity: 1;
+			visibility: visible;
+			transform: scale(1);
+		}
+
+		#scroll-progress:hover {
+			transform: scale(1.08);
+		}
+
+		.progress-ring {
+			position: relative;
+			width: 100%;
+			height: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.progress-ring svg {
+			width: 100%;
+			height: 100%;
+			transform: rotate(-90deg);
+		}
+
+		.progress-ring-bg,
+		.progress-ring-stroke {
+			fill: none;
+			stroke-linecap: round;
+		}
+
+		.progress-ring-bg {
+			stroke: rgba(255, 255, 255, 0.08);
+			stroke-width: 3.8;
+		}
+
+		.progress-ring-stroke {
+			stroke: #ffcc29;
+			stroke-width: 4.5;
+			stroke-dasharray: 276.5;
+			stroke-dashoffset: 276.5;
+			transition: stroke 0.2s ease, stroke-dashoffset 0.2s ease;
+			filter: drop-shadow(0 10px 30px rgba(255, 204, 41, 0.26));
+		}
+
+		#scroll-progress:hover .progress-ring-stroke {
+			stroke: #ffe86f;
+		}
+
+		.progress-icon {
+			position: absolute;
+			color: #ffffff;
+			font-size: 1.1rem;
+			font-weight: 700;
+			line-height: 1;
+			letter-spacing: 0.12em;
+			user-select: none;
+		}
+
+		@media (max-width: 767.98px) {
+			#scroll-progress {
+				right: max(1.4rem, env(safe-area-inset-right, 1.4rem));
+				bottom: 1.25rem;
+				width: 54px;
+				height: 54px;
+			}
+
+			.progress-icon {
+				font-size: 0.98rem;
+			}
 		}
 
 		/* Social Icons Group Container */
@@ -1404,6 +1621,17 @@
 				<span></span>
 			</div>
 		</div>
+
+		<!-- Scroll Progress Button -->
+		<div id="scroll-progress" class="scroll-progress-hidden" role="button" aria-label="Scroll back to top" tabindex="0">
+			<div class="progress-ring">
+				<svg viewBox="0 0 100 100" width="100" height="100" aria-hidden="true">
+					<circle class="progress-ring-bg" cx="50" cy="50" r="44" />
+					<circle class="progress-ring-stroke" cx="50" cy="50" r="44" />
+				</svg>
+				<span class="progress-icon">↑</span>
+			</div>
+		</div>
 	</section>
 
 
@@ -2079,18 +2307,34 @@
 
 	<footer class="ftco-footer ftco-section">
 		<div class="container">
-			<div class="row">
-				<div class="col-md-12">
-					<div class="footer-content">
-						<div class="footer-left">
-							<p class="footer-copyright">
-								Copyright © <span id="copyright-year">2026</span> • All rights reserved • Made by Riazul Islam Tusar
-							</p>
-						</div>
-						<div class="footer-right">
-							<p class="footer-location">
-								<span class="status-dot"></span> Dhaka, Bangladesh — now <span id="footer-clock-time">00:00</span>
-							</p>
+			<div class="footer-grid">
+				<div class="footer-row footer-top">
+					<div class="footer-left">
+						<p class="footer-copy">
+							Copyright © <span id="copyright-year">2026</span> • All rights reserved • Made by Riazul Islam Tusar
+						</p>
+					</div>
+
+					<div class="footer-right">
+						<p class="footer-location">
+							<span class="status-dot"></span> Dhaka, Bangladesh — now <span id="footer-clock-time">00:00</span>
+						</p>
+					</div>
+				</div>
+
+				<div class="footer-row footer-bottom">
+					<div class="footer-center">
+						<div class="visitor-stats-bar" aria-label="Visitor statistics">
+							<span class="visitor-stats-label">Visitor Statistics:</span>
+							<span class="visitor-stat-item">
+								<span class="visitor-stat-title">Today's Visitors</span>
+								<span class="visitor-stat-number" id="visitor-today">—</span>
+							</span>
+							<span class="visitor-stats-separator" aria-hidden="true">•</span>
+							<span class="visitor-stat-item">
+								<span class="visitor-stat-title">Total Visitors</span>
+								<span class="visitor-stat-number" id="visitor-total">—</span>
+							</span>
 						</div>
 					</div>
 				</div>
@@ -2124,41 +2368,157 @@
 	<script src="script.js"></script>
 
 	<!-- Footer Clock & Copyright Year Initialization -->
-	<script>
-		// Initialize footer clock and copyright year
-		function initFooterElements() {
-			// Update copyright year
-			const copyrightYearElement = document.getElementById('copyright-year');
-			if (copyrightYearElement) {
-				copyrightYearElement.textContent = new Date().getFullYear();
-			}
-			
-			// Update footer clock
-			const footerClockElement = document.getElementById('footer-clock-time');
-			if (footerClockElement) {
-				function updateFooterClock() {
-					const now = new Date();
-					const hours = String(now.getHours()).padStart(2, '0');
-					const minutes = String(now.getMinutes()).padStart(2, '0');
-					const timeString = `${hours}:${minutes}`;
-					footerClockElement.textContent = timeString;
-				}
-				
-				// Initial update
-				updateFooterClock();
-				
-				// Update every second
-				setInterval(updateFooterClock, 1000);
+<script>
+// Initialize footer clock and visitor counters
+function initFooterElements() {
+	const copyrightYearElement = document.getElementById('copyright-year');
+	if (copyrightYearElement) {
+		copyrightYearElement.textContent = new Date().getFullYear();
+	}
+
+	const footerClockElement = document.getElementById('footer-clock-time');
+	const visitorTodayEl = document.getElementById('visitor-today');
+	const visitorTotalEl = document.getElementById('visitor-total');
+
+	function updateFooterClock() {
+		if (!footerClockElement) return;
+		const now = new Date();
+		const hours = String(now.getHours()).padStart(2, '0');
+		const minutes = String(now.getMinutes()).padStart(2, '0');
+		footerClockElement.textContent = `${hours}:${minutes}`;
+	}
+
+	async function fetchCount(key, increment = false) {
+		const namespace = 'theriazul-site';
+		const url = increment
+			? `https://api.countapi.xyz/hit/${namespace}/${key}`
+			: `https://api.countapi.xyz/get/${namespace}/${key}`;
+
+		try {
+			const response = await fetch(url, { cache: 'no-store' });
+			if (!response.ok) throw new Error('CountAPI request failed');
+			const data = await response.json();
+			return Number(data.value ?? 0);
+		} catch (error) {
+			console.warn('Visitor stats failed:', error);
+			return null;
+		}
+	}
+
+	function animateNumber(element, targetValue) {
+		if (!element || targetValue == null) return;
+		const duration = 1200;
+		const startTime = performance.now();
+
+		function updateFrame(now) {
+			const progress = Math.min((now - startTime) / duration, 1);
+			const eased = 1 - Math.pow(1 - progress, 3);
+			const current = Math.floor(targetValue * eased);
+			element.textContent = current.toLocaleString();
+			if (progress < 1) {
+				requestAnimationFrame(updateFrame);
 			}
 		}
-		
-		// Initialize when DOM is ready
-		if (document.readyState === 'loading') {
-			document.addEventListener('DOMContentLoaded', initFooterElements);
+
+		requestAnimationFrame(updateFrame);
+	}
+
+	async function initializeVisitorStats() {
+		if (!visitorTodayEl || !visitorTotalEl) return;
+		visitorTodayEl.textContent = '—';
+		visitorTotalEl.textContent = '—';
+
+		const todayKey = `today-${new Date().toISOString().slice(0, 10)}`;
+		const [todayCount, totalCount] = await Promise.all([
+			fetchCount(todayKey, true),
+			fetchCount('total-visitors', true)
+		]);
+
+		if (todayCount != null) {
+			animateNumber(visitorTodayEl, todayCount);
+		}
+
+		if (totalCount != null) {
+			animateNumber(visitorTotalEl, totalCount);
+		}
+	}
+
+	updateFooterClock();
+	setInterval(updateFooterClock, 1000);
+	initializeVisitorStats();
+}
+
+if (document.readyState === 'loading') {
+	document.addEventListener('DOMContentLoaded', initFooterElements);
+} else {
+	initFooterElements();
+}
+
+function initScrollProgress() {
+	const progressRoot = document.getElementById('scroll-progress');
+	const progressStroke = document.querySelector('.progress-ring-stroke');
+	const homeSection = document.getElementById('home-section');
+	const aboutSection = document.getElementById('about-section');
+
+	if (!progressRoot || !progressStroke || !homeSection || !aboutSection) {
+		return;
+	}
+
+	const ringRadius = 44;
+	const circumference = 2 * Math.PI * ringRadius;
+	progressStroke.style.strokeDasharray = `${circumference}`;
+	progressStroke.style.strokeDashoffset = `${circumference}`;
+
+	let ticking = false;
+
+	function updateProgress() {
+		const scrollTop = window.scrollY || document.documentElement.scrollTop;
+		const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+		const progress = totalHeight > 0 ? Math.min(Math.max(scrollTop / totalHeight, 0), 1) : 0;
+		const offset = circumference * (1 - progress);
+		progressStroke.style.strokeDashoffset = offset;
+
+		const shouldShow = scrollTop + window.innerHeight * 0.84 > aboutSection.offsetTop;
+
+		if (shouldShow) {
+			progressRoot.classList.add('show-scroll-progress');
 		} else {
-			initFooterElements();
+			progressRoot.classList.remove('show-scroll-progress');
 		}
-	</script>
+		ticking = false;
+	}
+
+	function requestUpdate() {
+		if (!ticking) {
+			ticking = true;
+			requestAnimationFrame(updateProgress);
+		}
+	}
+
+	progressRoot.addEventListener('click', event => {
+		event.preventDefault();
+		window.scrollTo({ top: 0, behavior: 'smooth' });
+	});
+
+	progressRoot.addEventListener('keydown', event => {
+		if (event.key === 'Enter' || event.key === ' ') {
+			event.preventDefault();
+			window.scrollTo({ top: 0, behavior: 'smooth' });
+		}
+	});
+
+	window.addEventListener('scroll', requestUpdate, { passive: true });
+	window.addEventListener('resize', requestUpdate);
+
+	updateProgress();
+}
+
+if (document.readyState === 'loading') {
+	document.addEventListener('DOMContentLoaded', initScrollProgress);
+} else {
+	initScrollProgress();
+}
+</script>
 
 </body>
 
