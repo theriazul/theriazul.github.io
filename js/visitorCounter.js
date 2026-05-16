@@ -9,7 +9,6 @@ function formatNumber(num) {
 const STORAGE_TOTAL_KEY = 'visitor_total_count';
 const STORAGE_TODAY_KEY = 'visitor_today_count';
 const STORAGE_TODAY_DATE_KEY = 'visitor_today_date';
-const STORAGE_VISITED_KEY = 'visitor_visited_today';
 
 // Backend endpoints
 const SERVER_VISIT_ENDPOINT = '/api/visit';
@@ -56,16 +55,6 @@ function incrementCounts() {
   counts.today += 1;
   saveCounts(counts.total, counts.today);
   return counts;
-}
-
-// Check if user already visited today
-function hasVisitedToday() {
-  return localStorage.getItem(STORAGE_VISITED_KEY) === getTodayDate();
-}
-
-// Mark today's visit in localStorage
-function markVisited() {
-  localStorage.setItem(STORAGE_VISITED_KEY, getTodayDate());
 }
 
 // Update DOM with visitor counts
@@ -120,25 +109,13 @@ async function fetchServerStats() {
 async function recordCountApiVisit() {
   try {
     const todayKey = `${COUNTAPI_TODAY_KEY_PREFIX}${getTodayDate()}`;
-    const totalResponse = await fetch(`${COUNTAPI_BASE}/hit/${COUNTAPI_NAMESPACE}/${COUNTAPI_TOTAL_KEY}`);
-    const todayResponse = await fetch(`${COUNTAPI_BASE}/hit/${COUNTAPI_NAMESPACE}/${todayKey}`);
-
-    return totalResponse.ok && todayResponse.ok;
-  } catch (error) {
-    console.debug('[visitorCounter] CountAPI visit failed:', error);
-    return false;
-  }
-}
-
-// GET stats from CountAPI
-async function fetchCountApiStats() {
-  try {
-    const todayKey = `${COUNTAPI_TODAY_KEY_PREFIX}${getTodayDate()}`;
-    const totalResponse = await fetch(`${COUNTAPI_BASE}/get/${COUNTAPI_NAMESPACE}/${COUNTAPI_TOTAL_KEY}`);
-    const todayResponse = await fetch(`${COUNTAPI_BASE}/get/${COUNTAPI_NAMESPACE}/${todayKey}`);
+    const [totalResponse, todayResponse] = await Promise.all([
+      fetch(`${COUNTAPI_BASE}/hit/${COUNTAPI_NAMESPACE}/${COUNTAPI_TOTAL_KEY}`),
+      fetch(`${COUNTAPI_BASE}/hit/${COUNTAPI_NAMESPACE}/${todayKey}`)
+    ]);
 
     if (!totalResponse.ok || !todayResponse.ok) {
-      throw new Error('CountAPI stats unavailable');
+      throw new Error('CountAPI hit failed');
     }
 
     const totalData = await totalResponse.json();
@@ -149,18 +126,14 @@ async function fetchCountApiStats() {
       today: parseInt(todayData.value || 0, 10)
     };
   } catch (error) {
-    console.debug('[visitorCounter] CountAPI stats failed:', error);
+    console.debug('[visitorCounter] CountAPI visit failed:', error);
     return null;
   }
 }
 
 // Fallback local initialization when backend and CountAPI are unavailable
 function initLocalVisitorCounts() {
-  if (!hasVisitedToday()) {
-    incrementCounts();
-    markVisited();
-  }
-  const counts = getLocalCounts();
+  const counts = incrementCounts();
   updateDOMCounts(counts.total, counts.today);
 }
 
@@ -176,9 +149,7 @@ async function initVisitorCounter() {
     }
 
     if (!stats) {
-      if (await recordCountApiVisit()) {
-        stats = await fetchCountApiStats();
-      }
+      stats = await recordCountApiVisit();
     }
 
     if (stats) {
