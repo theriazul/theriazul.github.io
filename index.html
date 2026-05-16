@@ -2388,23 +2388,6 @@ function initFooterElements() {
 		footerClockElement.textContent = `${hours}:${minutes}`;
 	}
 
-	async function fetchCount(key, increment = false) {
-		const namespace = 'theriazul-site';
-		const url = increment
-			? `https://api.countapi.xyz/hit/${namespace}/${key}`
-			: `https://api.countapi.xyz/get/${namespace}/${key}`;
-
-		try {
-			const response = await fetch(url, { cache: 'no-store' });
-			if (!response.ok) throw new Error('CountAPI request failed');
-			const data = await response.json();
-			return Number(data.value ?? 0);
-		} catch (error) {
-			console.warn('Visitor stats failed:', error);
-			return null;
-		}
-	}
-
 	function animateNumber(element, targetValue) {
 		if (!element || targetValue == null) return;
 		const duration = 1200;
@@ -2423,24 +2406,10 @@ function initFooterElements() {
 		requestAnimationFrame(updateFrame);
 	}
 
-	async function initializeVisitorStats() {
-		if (!visitorTodayEl || !visitorTotalEl) return;
-		visitorTodayEl.textContent = '—';
-		visitorTotalEl.textContent = '—';
-
-		const todayKey = `today-${new Date().toISOString().slice(0, 10)}`;
-		const [todayCount, totalCount] = await Promise.all([
-			fetchCount(todayKey, true),
-			fetchCount('total-visitors', true)
-		]);
-
-		if (todayCount != null) {
-			animateNumber(visitorTodayEl, todayCount);
-		}
-
-		if (totalCount != null) {
-			animateNumber(visitorTotalEl, totalCount);
-		}
+	function initializeVisitorStats() {
+		// Visitor stats are handled by js/visitorCounter.js
+		updateFooterClock();
+		setInterval(updateFooterClock, 1000);
 	}
 
 	updateFooterClock();
@@ -2519,6 +2488,9 @@ if (document.readyState === 'loading') {
 	initScrollProgress();
 }
 </script>
+
+
+<script src="js/visitorCounter.js"></script>
 
 </body>
 
