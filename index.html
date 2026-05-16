@@ -2369,6 +2369,24 @@
 
 	<!-- Footer Clock & Copyright Year Initialization -->
 <script>
+// Initialize localStorage defaults for visitor counter
+function initLocalStorage() {
+	const today = new Date().toISOString().split('T')[0];
+	
+	// Initialize localStorage if not set
+	if (!localStorage.getItem('visitor_total_count')) {
+		localStorage.setItem('visitor_total_count', '0');
+	}
+	if (!localStorage.getItem('visitor_today_count')) {
+		localStorage.setItem('visitor_today_count', '0');
+	}
+	if (!localStorage.getItem('visitor_today_date')) {
+		localStorage.setItem('visitor_today_date', today);
+	}
+}
+
+initLocalStorage();
+
 // Initialize footer clock and visitor counters
 function initFooterElements() {
 	const copyrightYearElement = document.getElementById('copyright-year');
@@ -2377,8 +2395,6 @@ function initFooterElements() {
 	}
 
 	const footerClockElement = document.getElementById('footer-clock-time');
-	const visitorTodayEl = document.getElementById('visitor-today');
-	const visitorTotalEl = document.getElementById('visitor-total');
 
 	function updateFooterClock() {
 		if (!footerClockElement) return;
@@ -2386,24 +2402,6 @@ function initFooterElements() {
 		const hours = String(now.getHours()).padStart(2, '0');
 		const minutes = String(now.getMinutes()).padStart(2, '0');
 		footerClockElement.textContent = `${hours}:${minutes}`;
-	}
-
-	function animateNumber(element, targetValue) {
-		if (!element || targetValue == null) return;
-		const duration = 1200;
-		const startTime = performance.now();
-
-		function updateFrame(now) {
-			const progress = Math.min((now - startTime) / duration, 1);
-			const eased = 1 - Math.pow(1 - progress, 3);
-			const current = Math.floor(targetValue * eased);
-			element.textContent = current.toLocaleString();
-			if (progress < 1) {
-				requestAnimationFrame(updateFrame);
-			}
-		}
-
-		requestAnimationFrame(updateFrame);
 	}
 
 	function initializeVisitorStats() {
