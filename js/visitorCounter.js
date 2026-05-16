@@ -75,13 +75,29 @@ function updateDOMCounts(total, today) {
   }
 }
 
+const DEFAULT_FETCH_OPTIONS = {
+  method: 'GET',
+  mode: 'cors',
+  cache: 'no-store',
+  headers: {
+    'Accept': 'application/json'
+  }
+};
+
+const POST_FETCH_OPTIONS = {
+  method: 'POST',
+  mode: 'cors',
+  cache: 'no-store',
+  headers: {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json'
+  }
+};
+
 // POST visit to backend server
 async function recordServerVisit() {
   try {
-    const response = await fetch(SERVER_VISIT_ENDPOINT, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' }
-    });
+    const response = await fetch(SERVER_VISIT_ENDPOINT, POST_FETCH_OPTIONS);
     return response.ok;
   } catch (error) {
     console.debug('[visitorCounter] Server visit failed:', error);
@@ -92,7 +108,7 @@ async function recordServerVisit() {
 // GET stats from backend server
 async function fetchServerStats() {
   try {
-    const response = await fetch(SERVER_STATS_ENDPOINT);
+    const response = await fetch(SERVER_STATS_ENDPOINT, DEFAULT_FETCH_OPTIONS);
     if (!response.ok) throw new Error(`Status ${response.status}`);
     const data = await response.json();
     return {
@@ -109,14 +125,10 @@ async function fetchServerStats() {
 async function recordCountApiVisit() {
   try {
     const todayKey = `${COUNTAPI_TODAY_KEY_PREFIX}${getTodayDate()}`;
-    const [totalResponse, todayResponse] = await Promise.all([
-      fetch(`${COUNTAPI_BASE}/hit/${COUNTAPI_NAMESPACE}/${COUNTAPI_TOTAL_KEY}`),
-      fetch(`${COUNTAPI_BASE}/hit/${COUNTAPI_NAMESPACE}/${todayKey}`)
-    ]);
-
-    if (!totalResponse.ok || !todayResponse.ok) {
-      throw new Error('CountAPI hit failed');
-    }
+    const totalResponse = await fetch(`${COUNTAPI_BASE}/hit/${COUNTAPI_NAMESPACE}/${COUNTAPI_TOTAL_KEY}`, DEFAULT_FETCH_OPTIONS);
+    if (!totalResponse.ok) throw new Error('CountAPI total hit failed');
+    const todayResponse = await fetch(`${COUNTAPI_BASE}/hit/${COUNTAPI_NAMESPACE}/${todayKey}`, DEFAULT_FETCH_OPTIONS);
+    if (!todayResponse.ok) throw new Error('CountAPI today hit failed');
 
     const totalData = await totalResponse.json();
     const todayData = await todayResponse.json();
