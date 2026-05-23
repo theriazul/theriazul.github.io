@@ -90,6 +90,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const desktopNavLinks = Array.from(document.querySelectorAll('.nav-link'));
   const mobileMenuLinks = Array.from(document.querySelectorAll('.mobile-nav-items a'));
   const allNavLinks = [...desktopNavLinks, ...mobileMenuLinks];
+  const portfolioNav = document.getElementById('portfolio-nav');
+
+  const updateStickyNav = () => {
+    if (!portfolioNav) return;
+    portfolioNav.classList.toggle('scrolled', window.scrollY > 36);
+  };
 
   const setActiveLink = (targetHash) => {
     allNavLinks.forEach(link => {
@@ -125,6 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   updateActiveNavLinks();
+  updateStickyNav();
 
   if (navToggle) {
     navToggle.addEventListener('click', event => {
@@ -154,6 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (now - lastScrollTime >= scrollThrottle) {
       lastScrollTime = now;
       updateActiveNavLinks();
+      updateStickyNav();
       if (window.innerWidth <= 767.98 && mobileMenu && mobileMenu.classList.contains('open')) {
         closeMobileMenu();
       }
@@ -191,6 +199,122 @@ document.addEventListener('DOMContentLoaded', () => {
       closeMobileMenu();
     });
   });
+
+  const initCinematicSlider = () => {
+    const slides = Array.from(document.querySelectorAll('.cinema-slide'));
+    const dots = Array.from(document.querySelectorAll('.slider-dot'));
+    const sliderShell = document.querySelector('.cinema-slider-shell');
+    let activeIndex = 0;
+    let autoplayId = null;
+    const delay = 5200;
+
+    if (!slides.length || !dots.length) return;
+
+    const preloadImages = () => {
+      slides.forEach(slide => {
+        const src = slide.querySelector('img')?.getAttribute('src');
+        if (src) {
+          const preload = new Image();
+          preload.src = src;
+        }
+      });
+    };
+
+    const setSlide = (index) => {
+      activeIndex = index;
+      slides.forEach((slide, slideIndex) => {
+        const isActive = slideIndex === index;
+        slide.classList.toggle('active', isActive);
+        slide.setAttribute('aria-hidden', !isActive);
+        const image = slide.querySelector('img');
+        if (image) {
+          image.style.transform = isActive ? 'translate3d(0, 0, 0) scale(1.03)' : 'translate3d(0, 0, 0) scale(1)';
+        }
+      });
+      dots.forEach((dot, dotIndex) => {
+        const selected = dotIndex === index;
+        dot.classList.toggle('active', selected);
+        dot.setAttribute('aria-selected', selected.toString());
+      });
+    };
+
+    const goNext = () => {
+      const nextIndex = (activeIndex + 1) % slides.length;
+      setSlide(nextIndex);
+    };
+
+    const goPrev = () => {
+      const prevIndex = (activeIndex - 1 + slides.length) % slides.length;
+      setSlide(prevIndex);
+    };
+
+    const updateParallax = (event) => {
+      const activeSlide = slides[activeIndex];
+      if (!activeSlide || !sliderShell) return;
+      const rect = sliderShell.getBoundingClientRect();
+      const x = ((event.clientX - rect.left) / rect.width - 0.5) * 2;
+      const y = ((event.clientY - rect.top) / rect.height - 0.5) * 2;
+      const intensity = 10;
+      const image = activeSlide.querySelector('img');
+      if (image) {
+        image.style.transform = `translate3d(${x * intensity}px, ${y * intensity}px, 0) scale(1.05)`;
+      }
+    };
+
+    const resetParallax = () => {
+      const image = slides[activeIndex]?.querySelector('img');
+      if (image) {
+        image.style.transform = 'translate3d(0, 0, 0) scale(1.03)';
+      }
+    };
+
+    const startAutoplay = () => {
+      if (autoplayId) return;
+      autoplayId = window.setInterval(goNext, delay);
+    };
+
+    const stopAutoplay = () => {
+      if (!autoplayId) return;
+      window.clearInterval(autoplayId);
+      autoplayId = null;
+    };
+
+    const prevButton = document.querySelector('.slider-arrow-prev');
+    const nextButton = document.querySelector('.slider-arrow-next');
+
+    dots.forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        setSlide(index);
+        stopAutoplay();
+        startAutoplay();
+      });
+    });
+
+    prevButton?.addEventListener('click', () => {
+      goPrev();
+      stopAutoplay();
+      startAutoplay();
+    });
+
+    nextButton?.addEventListener('click', () => {
+      goNext();
+      stopAutoplay();
+      startAutoplay();
+    });
+
+    sliderShell?.addEventListener('mousemove', updateParallax);
+    sliderShell?.addEventListener('mouseleave', () => {
+      resetParallax();
+      startAutoplay();
+    });
+    sliderShell?.addEventListener('mouseenter', stopAutoplay);
+
+    preloadImages();
+    setSlide(activeIndex);
+    startAutoplay();
+  };
+
+  initCinematicSlider();
 });
 
 // Intersection Observer for fade-in animations
