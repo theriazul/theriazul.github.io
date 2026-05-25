@@ -8423,7 +8423,13 @@ h1, h2, h3, h4, h5,
   padding-top: 100px; }
   @media (max-width: 991.98px) {
     .hero {
-      padding-top: 0; } }
+      padding-top: calc(5.5rem + env(safe-area-inset-top)); } }
+  @media (max-width: 767.98px) {
+    .hero {
+      padding-top: calc(5.6rem + env(safe-area-inset-top)); } }
+  @media (max-width: 575.98px) {
+    .hero {
+      padding-top: calc(5.3rem + env(safe-area-inset-top)); } }
 
 .owl-carousel {
   position: relative; }
@@ -8462,6 +8468,16 @@ h1, h2, h3, h4, h5,
     position: relative;
     height: 750px;
     z-index: 0; }
+    @media (max-width: 991.98px) {
+      .owl-carousel.home-slider {
+        height: auto;
+        min-height: 620px; } }
+    @media (max-width: 767.98px) {
+      .owl-carousel.home-slider {
+        min-height: 580px; } }
+    @media (max-width: 575.98px) {
+      .owl-carousel.home-slider {
+        min-height: 520px; } }
     .owl-carousel.home-slider .slider-item {
       background-size: cover;
       background-repeat: no-repeat;
@@ -8472,6 +8488,16 @@ h1, h2, h3, h4, h5,
       @media (max-width: 1199.98px) {
         .owl-carousel.home-slider .slider-item {
           background-position: center center !important; } }
+      @media (max-width: 991.98px) {
+        .owl-carousel.home-slider .slider-item {
+          height: auto;
+          min-height: 620px; } }
+      @media (max-width: 767.98px) {
+        .owl-carousel.home-slider .slider-item {
+          min-height: 580px; } }
+      @media (max-width: 575.98px) {
+        .owl-carousel.home-slider .slider-item {
+          min-height: 520px; } }
       .owl-carousel.home-slider .slider-item .overlay {
         position: absolute;
         top: 0;
@@ -8486,7 +8512,15 @@ h1, h2, h3, h4, h5,
         z-index: 0; }
         @media (max-width: 991.98px) {
           .owl-carousel.home-slider .slider-item .slider-text {
-            text-align: center; } }
+            text-align: center;
+            height: auto;
+            min-height: 620px; } }
+        @media (max-width: 767.98px) {
+          .owl-carousel.home-slider .slider-item .slider-text {
+            min-height: 580px; } }
+        @media (max-width: 575.98px) {
+          .owl-carousel.home-slider .slider-item .slider-text {
+            min-height: 520px; } }
         .owl-carousel.home-slider .slider-item .slider-text .one-third {
           width: 60%;
           position: relative;
@@ -9230,7 +9264,7 @@ textarea.form-control {
   background: #3c312e; }
 
 .ftco-footer {
-  font-size: 16px;
+  font-size: 14px;
   background: #000000;
   padding: 7em 0;
   z-index: 0; }
@@ -13564,11 +13598,17 @@ body.menu-open {
 @media (max-width: 767.98px) {
   /* Keep equal left/right gutters so navbar doesn't touch screen edges */
   .portfolio-nav {
-    left: 1rem;
-    right: 2rem; /* increased right gutter for extra breathing space */
+    left: 0.9rem;
+    right: 2rem;
     width: auto;
-    padding: 0.6rem 1rem;
+    padding: 0.55rem 1.15rem 0.55rem 0.9rem;
+    top: 0.9rem;
     box-sizing: border-box;
+  }
+
+  .portfolio-nav.scrolled {
+    top: 0.6rem;
+    padding: 0.5rem 1.1rem 0.5rem 0.9rem;
   }
 
   /* Remove extra container padding that can push content to the edges */
@@ -13589,7 +13629,7 @@ body.menu-open {
   .nav-tools {
     display: flex;
     align-items: center;
-    gap: 0.6rem;
+    gap: 0.55rem;
     margin-left: auto;
     flex-shrink: 0;
   }
@@ -13598,18 +13638,18 @@ body.menu-open {
     justify-content: space-between;
     align-items: center;
     position: relative;
-    min-height: 52px;
-    padding: 0 0.5rem; /* slightly larger inner padding to respect new right gutter */
+    min-height: 48px;
+    padding: 0 0.55rem;
     box-sizing: border-box;
   }
 
   .brand-anchor {
-    gap: 0.7rem;
+    gap: 0.6rem;
   }
 
   .brand-logo {
-    width: 42px;
-    height: 42px;
+    width: 40px;
+    height: 40px;
   }
 
   .brand-sub {
@@ -13617,36 +13657,50 @@ body.menu-open {
   }
 
   .resume-btn {
-    padding: 0.5rem 0.85rem;
-    font-size: 0.86rem;
+    padding: 0.45rem 0.85rem;
+    font-size: 0.84rem;
     white-space: nowrap;
-    max-width: 120px;
+    max-width: 110px;
     overflow: hidden;
     text-overflow: ellipsis;
     flex-shrink: 0;
   }
 
   .theme-toggle {
-    width: 42px;
-    height: 42px;
+    width: 40px;
+    height: 40px;
     flex-shrink: 0;
   }
 
   /* Prevent toolbar children from shrinking and causing layout shifts */
   .nav-tools > * { flex-shrink: 0; }
 
-  .nav-tools {
-    gap: 0.6rem;
-  }
-
   .mobile-menu {
     height: 100vh;
     overflow-y: auto;
     left: 0;
     right: 0;
+    padding-top: 1.2rem;
   }
 
-  /* Slightly smaller, subtler dot in the mobile menu */
+  .mobile-menu-inner {
+    padding: 4.5rem 1.25rem 2rem;
+  }
+
+  .mobile-nav-items {
+    gap: 0.9rem;
+  }
+
+  .mobile-nav-items li a {
+    font-size: 1.1rem;
+    padding: 0.95rem 1.2rem;
+  }
+
+  .mobile-status {
+    padding: 0.85rem 1rem;
+    font-size: 0.9rem;
+  }
+
   .mobile-status .status-dot {
     width: 7px;
     height: 7px;
