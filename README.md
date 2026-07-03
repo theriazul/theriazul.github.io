@@ -1,6 +1,6 @@
 # Riazul Islam Tusar
 
-I'm Self-taught Programmer and an open-source enthusiast.
+I'm a self-taught programmer and an open-source enthusiast.
 
 <p align="center">
   <h1 align="center">Summary Of My Github Live Graph</h1>
