@@ -1,7 +1,5 @@
 # Riazul Islam Tusar
 
-# Project Name
-
 Welcome to this project repository.
 
 ## Overview
