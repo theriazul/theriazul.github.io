@@ -340,8 +340,10 @@
             var hasAnimated = false;
 
             function animateCounter(counter) {
-                var target = parseInt(counter.getAttribute('data-target'), 10);
-                var suffix = counter.textContent.includes('+') ? '+' : '';
+                var targetText = counter.getAttribute('data-target') || '0';
+                var target = parseInt(targetText, 10);
+                var suffixMatch = targetText.match(/[^\d.-]+$/);
+                var suffix = suffixMatch ? suffixMatch[0] : '';
                 var start = 0;
                 var duration = 1800;
                 var startTime = null;
