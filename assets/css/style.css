@@ -12879,17 +12879,33 @@ div#featured-project-carousel {
   border-radius: 22px;
   background: rgba(255, 255, 255, 0.03);
   position: relative;
+  padding: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
 }
 
 .about-me-image-wrap img {
   width: 100%;
   display: block;
-  object-fit: cover;
-  transition: transform 0.5s ease;
+  height: auto;
+  object-fit: contain;
+  object-position: center bottom;
+  filter: grayscale(1);
+  -webkit-filter: grayscale(1);
+  transform: translateZ(0);
+  transform-origin: center bottom;
+  will-change: transform, filter;
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1), filter 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  backface-visibility: hidden;
 }
 
-.about-me-image-card:hover .about-me-image-wrap img {
-  transform: scale(1.04);
+.about-me-image-card:hover .about-me-image-wrap img,
+.about-me-image-card:focus-within .about-me-image-wrap img,
+.about-me-image-card:active .about-me-image-wrap img {
+  filter: grayscale(0);
+  -webkit-filter: grayscale(0);
+  transform: scale(1.03) translateZ(0);
 }
 
 .achievement-badge {
