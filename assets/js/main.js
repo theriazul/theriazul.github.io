@@ -394,20 +394,48 @@
 
         testimonialActivation: function () {
             var $testimonial = $('.testimonial-activation');
+            var $testimonialSection = $('#testimonial');
             var autoResumeTimer;
             var isAutoPaused = false;
+            var isHovering = false;
+            var isSectionVisible = false;
+            var shouldRestartFromStart = false;
+
+            function syncAutoPlay() {
+                if (!isSectionVisible || isHovering || isAutoPaused) {
+                    $testimonial.slick('slickPause');
+                    return;
+                }
+
+                if (shouldRestartFromStart) {
+                    $testimonial.slick('slickGoTo', 0, true);
+                    shouldRestartFromStart = false;
+                }
+
+                $testimonial.slick('slickPlay');
+            }
 
             function pauseAutoForManual(delay) {
                 clearTimeout(autoResumeTimer);
                 isAutoPaused = true;
-                $testimonial.slick('slickPause');
+                syncAutoPlay();
 
                 autoResumeTimer = setTimeout(function () {
                     isAutoPaused = false;
-                    if (!$testimonial.is(':hover')) {
-                        $testimonial.slick('slickPlay');
-                    }
+                    syncAutoPlay();
                 }, delay || 6000);
+            }
+
+            function updateSectionVisibility() {
+                if (!$testimonialSection.length) {
+                    isSectionVisible = true;
+                    syncAutoPlay();
+                    return;
+                }
+
+                var rect = $testimonialSection[0].getBoundingClientRect();
+                isSectionVisible = rect.top < window.innerHeight && rect.bottom > 0;
+                syncAutoPlay();
             }
 
             $testimonial.slick({
@@ -418,7 +446,7 @@
                 arrows: true,
                 adaptiveHeight: true,
                 autoplay: true,
-                autoplaySpeed: 4500,
+                autoplaySpeed: 3000,
                 speed: 700,
                 fade: true,
                 cssEase: 'ease-in-out',
@@ -429,18 +457,39 @@
             });
 
             $testimonial.on('mouseenter', function () {
-                $testimonial.slick('slickPause');
+                isHovering = true;
+                syncAutoPlay();
             });
 
             $testimonial.on('mouseleave', function () {
-                if (!isAutoPaused) {
-                    $testimonial.slick('slickPlay');
-                }
+                isHovering = false;
+                syncAutoPlay();
             });
 
             $testimonial.on('click', '.slick-arrow, .slick-dots button', function () {
-                pauseAutoForManual(6000);
+                pauseAutoForManual(4000);
             });
+
+            if ('IntersectionObserver' in window && $testimonialSection.length) {
+                var observer = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (entry) {
+                        if (entry.isIntersecting) {
+                            isSectionVisible = true;
+                            shouldRestartFromStart = true;
+                        } else {
+                            isSectionVisible = false;
+                        }
+                        syncAutoPlay();
+                    });
+                }, { threshold: 0.2 });
+
+                observer.observe($testimonialSection[0]);
+            } else {
+                updateSectionVisibility();
+                $(window).on('scroll resize', updateSectionVisibility);
+            }
+
+            updateSectionVisibility();
 
             $('.testimonial-item-one').slick({
                 infinite: true,

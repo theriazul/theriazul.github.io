@@ -37,13 +37,6 @@
 ----------------------------*/
 /* Default  */
 
-
-
-
-
-
-
-
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500;600;700&amp;display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&amp;display=swap");
 :root {
@@ -15278,5 +15271,3 @@ body.white-version {
 
 .white-version .slider-style-6 .cd-headline span {
   color: var(--color-white) !important; }
-
-
