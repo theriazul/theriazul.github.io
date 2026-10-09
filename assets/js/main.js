@@ -24,10 +24,11 @@
             imJs.smothScroll_Two();
             imJs.stickyAdjust();
             imJs.skillsMarquee();
-            imJs.testimonialActivation();
+            imJs.sliderActivation();
             imJs.photosGallery();
             imJs.aboutMeStats();
             imJs.contactForm();
+            imJs.projectDetailsModal();
             imJs.wowActive();
             imJs.awsActivation();
             imJs.demoActive();
@@ -163,7 +164,7 @@
                 return;
             }
 
-            // Keep the original web development rows intact and add two new category rows.
+            // Keep the existing skills marquee rows intact.
             var webDevelopmentSkills = [
                 { name: 'HTML5', icon: 'html' },
                 { name: 'CSS3', icon: 'css' },
@@ -271,19 +272,21 @@
                     threat: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"></circle><path d="M12 6v6l4 2"></path></svg>',
                     incident: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4z"></path><path d="M12 8v5"></path><path d="M12 15h.01"></path></svg>',
                     risk: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4z"></path><path d="M12 8v5"></path><path d="M12 15h.01"></path></svg>',
-                    monitor: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h4"></path><path d="M18 12h4"></path><path d="M12 2v4"></path><path d="M12 18v4"></path><circle cx="12" cy="12" r="4"></circle></svg>'
+                    monitor: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h4"></path><path d="M18 12h4"></path><path d="M12 2v4"></path><path d="M12 18v4"></path><circle cx="12" cy="12" r="4"></circle></svg>',
                 };
                 return svgMap[icon] || svgMap.js;
             }
 
             function renderSkill(item) {
-                return '<div class="skill-pill"><span class="skill-icon">' + getIconMarkup(item.icon) + '</span><span>' + item.name + '</span></div>';
+                return '<div class="skill-pill"><span class="skill-icon" aria-hidden="true">' + getIconMarkup(item.icon) + '</span><span>' + item.name + '</span></div>';
             }
 
             function renderTrack(items, directionClass) {
-                var duplicatedItems = items.concat(items);
-                var content = duplicatedItems.map(renderSkill).join('');
-                return '<div class="skills-marquee-track ' + directionClass + '">' + content + '</div>';
+                var content = items.map(renderSkill).join('');
+                return '<div class="skills-marquee-track ' + directionClass + '">' +
+                    '<div class="skills-marquee-group">' + content + '</div>' +
+                    '<div class="skills-marquee-group" aria-hidden="true">' + content + '</div>' +
+                '</div>';
             }
 
             $container.html(
@@ -392,125 +395,7 @@
             }
         },
 
-        testimonialActivation: function () {
-            var $testimonial = $('.testimonial-activation');
-            var $testimonialSection = $('#testimonial');
-            var autoResumeTimer;
-            var isAutoPaused = false;
-            var isHovering = false;
-            var isSectionVisible = false;
-            var shouldRestartFromStart = false;
-
-            function syncAutoPlay() {
-                if (!isSectionVisible || isHovering || isAutoPaused) {
-                    $testimonial.slick('slickPause');
-                    return;
-                }
-
-                if (shouldRestartFromStart) {
-                    $testimonial.slick('slickGoTo', 0, true);
-                    shouldRestartFromStart = false;
-                }
-
-                $testimonial.slick('slickPlay');
-            }
-
-            function pauseAutoForManual(delay) {
-                clearTimeout(autoResumeTimer);
-                isAutoPaused = true;
-                syncAutoPlay();
-
-                autoResumeTimer = setTimeout(function () {
-                    isAutoPaused = false;
-                    syncAutoPlay();
-                }, delay || 6000);
-            }
-
-            function updateSectionVisibility() {
-                if (!$testimonialSection.length) {
-                    isSectionVisible = true;
-                    syncAutoPlay();
-                    return;
-                }
-
-                var rect = $testimonialSection[0].getBoundingClientRect();
-                isSectionVisible = rect.top < window.innerHeight && rect.bottom > 0;
-                syncAutoPlay();
-            }
-
-            $testimonial.slick({
-                infinite: true,
-                slidesToShow: 1,
-                slidesToScroll: 1,
-                dots: true,
-                arrows: true,
-                adaptiveHeight: true,
-                autoplay: true,
-                autoplaySpeed: 3000,
-                speed: 700,
-                fade: true,
-                cssEase: 'ease-in-out',
-                pauseOnHover: true,
-                pauseOnFocus: true,
-                prevArrow: '<button class="slide-arrow prev-arrow"><i class="feather-arrow-left"></i></button>',
-                nextArrow: '<button class="slide-arrow next-arrow"><i class="feather-arrow-right"></i></button>'
-            });
-
-            $testimonial.on('mouseenter', function () {
-                isHovering = true;
-                syncAutoPlay();
-            });
-
-            $testimonial.on('mouseleave', function () {
-                isHovering = false;
-                syncAutoPlay();
-            });
-
-            $testimonial.on('click', '.slick-arrow, .slick-dots button', function () {
-                pauseAutoForManual(4000);
-            });
-
-            if ('IntersectionObserver' in window && $testimonialSection.length) {
-                var observer = new IntersectionObserver(function (entries) {
-                    entries.forEach(function (entry) {
-                        if (entry.isIntersecting) {
-                            isSectionVisible = true;
-                            shouldRestartFromStart = true;
-                        } else {
-                            isSectionVisible = false;
-                        }
-                        syncAutoPlay();
-                    });
-                }, { threshold: 0.2 });
-
-                observer.observe($testimonialSection[0]);
-            } else {
-                updateSectionVisibility();
-                $(window).on('scroll resize', updateSectionVisibility);
-            }
-
-            updateSectionVisibility();
-
-            $('.testimonial-item-one').slick({
-                infinite: true,
-                slidesToShow: 1,
-                slidesToScroll: 1,
-                dots: true,
-                arrows: true,
-                adaptiveHeight: true,
-                cssEase: 'linear',
-                prevArrow: '<button class="slide-arrow prev-arrow"><i class="feather-chevron-left"></i></button>',
-                nextArrow: '<button class="slide-arrow next-arrow"><i class="feather-chevron-right"></i></button>',
-                responsive: [
-                {
-                    breakpoint: 1200,
-                    settings: {
-                        arrows: false,
-                    }
-                }]
-            });
-
-
+        sliderActivation: function () {
             $('.portfolio-slick-activation').slick({
                 infinite: true,
                 slidesToShow: 3,
@@ -584,42 +469,6 @@
                 ]
             });
 
-            $('.testimonial-activation-item-3').slick({
-                arrows: true,
-                dots: true,
-                infinite: true,
-                speed: 500,
-                slidesToShow: 3,
-                slidesToScroll: 1,
-                adaptiveHeight: true,
-                prevArrow: '<button class="slide-arrow prev-arrow"><i class="feather-chevron-left"></i></button>',
-                nextArrow: '<button class="slide-arrow next-arrow"><i class="feather-chevron-right"></i></button>',
-                responsive: [{
-                        breakpoint: 1124,
-                        settings: {
-                            slidesToShow: 2,
-                            slidesToScroll: 1,
-                        }
-                    },
-                    {
-                        breakpoint: 768,
-                        settings: {
-                            slidesToShow: 2,
-                            slidesToScroll: 1,
-                            arrows: false,
-                        }
-                    },
-                    {
-                        breakpoint: 577,
-                        settings: {
-                            slidesToShow: 1,
-                            slidesToScroll: 1,
-                            arrows: false,
-                        }
-                    }
-                ]
-            });
-
             $('.brand-activation-item-5').slick({
                 arrows: true,
                 dots: true,
@@ -658,6 +507,355 @@
 
         featherAtcivation: function () {
             feather.replace()
+        },
+
+        projectDetailsModal: function () {
+            var modal = document.getElementById('project-details-modal');
+            var portfolio = document.getElementById('projects') ||
+                document.getElementById('portfolio');
+            if (!modal || !portfolio) {
+                return;
+            }
+
+            var dialog = modal.querySelector('.project-details-dialog');
+            var closeButton = modal.querySelector('.project-details-close');
+            var image = modal.querySelector('.project-details-image');
+            var category = modal.querySelector('.project-details-category');
+            var title = modal.querySelector('#project-details-title');
+            var description = modal.querySelector('.project-details-description');
+            var technologies = modal.querySelector('.project-details-technologies');
+            var technologyList = technologies.querySelector('ul');
+            var actionRow = modal.querySelector('.project-details-actions');
+            var repositoryLink = modal.querySelector('.project-details-github');
+            var demoLink = modal.querySelector('.project-details-demo');
+            var projectLink = modal.querySelector('.project-details-link');
+            var activeCard = null;
+            var originalBodyOverflow = '';
+            var closeTimer;
+
+            function updateLikeButton(button, title, count, liked) {
+                var countLabel = button.querySelector('.project-like-count');
+                button.setAttribute('aria-pressed', liked ? 'true' : 'false');
+                button.setAttribute('aria-label', (liked ? 'Unlike ' : 'Like ') + title);
+                button.classList.toggle('is-liked', liked);
+                countLabel.textContent = String(count);
+            }
+
+            function initializeLikes(card, cardTitle) {
+                var button = card.querySelector('[data-project-like]');
+                var countLabel = button.querySelector('.project-like-count');
+                var projectId = card.dataset.projectId;
+                var configuredInitial = Number.parseInt(card.dataset.initialLikes, 10);
+                var initialCount = Number.isFinite(configuredInitial) && configuredInitial >= 0 ?
+                    configuredInitial : 0;
+                var countKey = 'portfolio-like-count:' + projectId;
+                var likedKey = 'portfolio-liked:' + projectId;
+                var count = initialCount;
+                var liked = false;
+
+                try {
+                    var storedCount = window.localStorage.getItem(countKey);
+                    var storedLiked = window.localStorage.getItem(likedKey);
+                    if (storedCount !== null && /^\d+$/.test(storedCount)) {
+                        count = Number.parseInt(storedCount, 10);
+                    } else {
+                        window.localStorage.setItem(countKey, String(initialCount));
+                    }
+                    if (storedLiked !== null) {
+                        liked = storedLiked === 'true';
+                    } else {
+                        window.localStorage.setItem(likedKey, 'false');
+                    }
+                } catch (error) {
+                    console.error('Unable to restore project likes from localStorage.', error);
+                }
+
+                updateLikeButton(button, cardTitle, count, liked);
+                button.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    liked = !liked;
+                    count = Math.max(0, count + (liked ? 1 : -1));
+                    updateLikeButton(button, cardTitle, count, liked);
+
+                    button.classList.remove('is-animating');
+                    button.offsetWidth;
+                    if (liked) {
+                        button.classList.add('is-animating');
+                        window.setTimeout(function () {
+                            button.classList.remove('is-animating');
+                        }, 360);
+                    }
+
+                    try {
+                        window.localStorage.setItem(countKey, String(count));
+                        window.localStorage.setItem(likedKey, liked ? 'true' : 'false');
+                    } catch (error) {
+                        console.error('Unable to save project likes to localStorage.', error);
+                    }
+                });
+            }
+
+            function validExternalUrl(value, githubOnly) {
+                if (!value || /^ADD_[A-Z_]+$/.test(value)) {
+                    return null;
+                }
+
+                var url;
+                try {
+                    url = new URL(value);
+                } catch (error) {
+                    return null;
+                }
+
+                if ((url.protocol !== 'https:' && url.protocol !== 'http:') ||
+                    url.username || url.password ||
+                    (githubOnly && (url.protocol !== 'https:' ||
+                        url.hostname !== 'github.com' ||
+                        url.pathname.split('/').filter(Boolean).length !== 2 ||
+                        url.search || url.hash))) {
+                    return null;
+                }
+
+                return url.href;
+            }
+
+            function configureCardRepository(card, cardTitle) {
+                var repositoryLink = card.querySelector('[data-project-repository]');
+                if (!repositoryLink) {
+                    repositoryLink = document.createElement('a');
+                    repositoryLink.className = 'project-card-github';
+                    repositoryLink.setAttribute('data-project-repository', '');
+                    repositoryLink.setAttribute('target', '_blank');
+                    repositoryLink.setAttribute('rel', 'noopener noreferrer');
+
+                    var icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                    icon.setAttribute('viewBox', '0 0 24 24');
+                    icon.setAttribute('aria-hidden', 'true');
+                    icon.setAttribute('focusable', 'false');
+                    var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    path.setAttribute('fill', 'currentColor');
+                    path.setAttribute('d', 'M12 .297a12 12 0 0 0-3.79 23.4c.6.11.82-.26.82-.58v-2.23c-3.34.73-4.04-1.42-4.04-1.42-.55-1.39-1.33-1.76-1.33-1.76-1.09-.75.08-.74.08-.74 1.2.08 1.83 1.23 1.83 1.23 1.07 1.84 2.8 1.31 3.49 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.34-5.47-5.95 0-1.31.47-2.38 1.23-3.22-.12-.3-.53-1.52.12-3.17 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.29-1.55 3.3-1.23 3.3-1.23.65 1.65.24 2.87.12 3.17.77.84 1.23 1.91 1.23 3.22 0 4.62-2.8 5.64-5.48 5.94.43.37.81 1.1.81 2.22v3.29c0 .32.22.69.83.57A12 12 0 0 0 12 .297z');
+                    icon.appendChild(path);
+                    repositoryLink.appendChild(icon);
+                    card.appendChild(repositoryLink);
+                    repositoryLink.addEventListener('click', function (event) {
+                        event.stopPropagation();
+                        if (!repositoryLink.getAttribute('href')) {
+                            event.preventDefault();
+                        }
+                    });
+                }
+
+                var repositoryUrl = validExternalUrl(card.dataset.githubUrl, true);
+                if (repositoryUrl) {
+                    repositoryLink.href = repositoryUrl;
+                    repositoryLink.removeAttribute('aria-disabled');
+                    repositoryLink.removeAttribute('tabindex');
+                    repositoryLink.setAttribute('aria-label', 'View GitHub repository for ' + cardTitle);
+                    repositoryLink.title = 'View repository on GitHub';
+                    repositoryLink.classList.remove('is-unavailable');
+                } else {
+                    repositoryLink.removeAttribute('href');
+                    repositoryLink.setAttribute('aria-disabled', 'true');
+                    repositoryLink.setAttribute('tabindex', '-1');
+                    repositoryLink.setAttribute('aria-label', 'Repository not available for ' + cardTitle);
+                    repositoryLink.title = 'Repository not available';
+                    repositoryLink.classList.add('is-unavailable');
+                }
+            }
+
+            function open(card) {
+                var cardTitle = card.querySelector('.content .title');
+                var cardCategory = card.querySelector('.category-list');
+                var cardImage = card.querySelector('.thumbnail img');
+                var repositoryUrl = validExternalUrl(card.dataset.githubUrl, true);
+                var demoUrl = validExternalUrl(card.dataset.liveDemoUrl, false);
+                var externalProjectUrl = validExternalUrl(card.dataset.projectUrl, false);
+                var tools = (card.dataset.projectTechnologies || '')
+                    .split(',')
+                    .map(function (tool) { return tool.trim(); })
+                    .filter(Boolean);
+
+                activeCard = card;
+                window.clearTimeout(closeTimer);
+                title.textContent = cardTitle ? cardTitle.textContent.trim() : 'Project details';
+                configureCardRepository(card, title.textContent);
+                category.textContent = cardCategory ? cardCategory.textContent.trim() : '';
+                description.textContent = card.dataset.projectDescription &&
+                    card.dataset.projectDescription !== 'ADD_PROJECT_DESCRIPTION' ?
+                    card.dataset.projectDescription :
+                    'A project description has not been provided yet.';
+
+                image.src = cardImage ? cardImage.currentSrc || cardImage.src : '';
+                image.alt = title.textContent;
+
+                technologyList.textContent = '';
+                technologies.hidden = tools.length === 0;
+                tools.forEach(function (tool) {
+                    var item = document.createElement('li');
+                    item.textContent = tool;
+                    technologyList.appendChild(item);
+                });
+
+                repositoryLink.classList.toggle('is-unavailable', !repositoryUrl);
+                if (repositoryUrl) {
+                    repositoryLink.href = repositoryUrl;
+                    repositoryLink.removeAttribute('aria-disabled');
+                    repositoryLink.removeAttribute('tabindex');
+                    repositoryLink.setAttribute('aria-label', 'View repository on GitHub: ' + title.textContent);
+                    repositoryLink.title = 'Open GitHub repository';
+                } else {
+                    repositoryLink.removeAttribute('href');
+                    repositoryLink.setAttribute('aria-disabled', 'true');
+                    repositoryLink.setAttribute('tabindex', '-1');
+                    repositoryLink.setAttribute('aria-label', 'Repository not available for ' + title.textContent);
+                    repositoryLink.title = 'Repository not available';
+                }
+
+                demoLink.hidden = false;
+                demoLink.classList.toggle('is-unavailable', !demoUrl);
+                if (demoUrl) {
+                    demoLink.href = demoUrl;
+                    demoLink.removeAttribute('aria-disabled');
+                    demoLink.removeAttribute('tabindex');
+                    demoLink.setAttribute('aria-label', 'Open live demo for ' + title.textContent);
+                    demoLink.title = 'Open live demo';
+                } else {
+                    demoLink.removeAttribute('href');
+                    demoLink.setAttribute('aria-disabled', 'true');
+                    demoLink.setAttribute('tabindex', '-1');
+                    demoLink.setAttribute('aria-label', 'Live demo not available for ' + title.textContent);
+                    demoLink.title = 'Live demo not available';
+                }
+
+                projectLink.hidden = !externalProjectUrl;
+                if (externalProjectUrl) {
+                    projectLink.href = externalProjectUrl;
+                } else {
+                    projectLink.removeAttribute('href');
+                }
+                actionRow.hidden = false;
+
+                originalBodyOverflow = document.body.style.overflow;
+                document.body.style.overflow = 'hidden';
+                modal.hidden = false;
+                modal.setAttribute('aria-hidden', 'false');
+                modal.offsetHeight;
+                modal.classList.remove('is-closing');
+                modal.classList.add('is-open');
+                closeButton.focus();
+            }
+
+            function close() {
+                if (modal.hidden) {
+                    return;
+                }
+
+                modal.classList.remove('is-open');
+                modal.classList.add('is-closing');
+                modal.setAttribute('aria-hidden', 'true');
+                document.body.style.overflow = originalBodyOverflow;
+                window.clearTimeout(closeTimer);
+                closeTimer = window.setTimeout(function () {
+                    modal.hidden = true;
+                    modal.classList.remove('is-closing');
+                    if (activeCard) {
+                        activeCard.focus();
+                    }
+                }, 220);
+            }
+
+            portfolio.querySelectorAll('.rn-portfolio').forEach(function (card) {
+                var heading = card.querySelector('.content .title');
+                var cardTitle = heading ? heading.textContent.trim() : 'project';
+                initializeLikes(card, cardTitle);
+                configureCardRepository(card, cardTitle);
+                card.setAttribute('role', 'button');
+                card.setAttribute('tabindex', '0');
+                card.setAttribute('aria-haspopup', 'dialog');
+                card.setAttribute('aria-controls', modal.id);
+                card.setAttribute('aria-label', 'View project details: ' +
+                    (heading ? heading.textContent.trim() : 'project'));
+                card.querySelectorAll('a').forEach(function (link) {
+                    if (link.hasAttribute('data-project-repository')) {
+                        return;
+                    }
+                    link.setAttribute('tabindex', '-1');
+                    link.setAttribute('aria-hidden', 'true');
+                    link.setAttribute('role', 'presentation');
+                    link.removeAttribute('href');
+                });
+
+                card.addEventListener('click', function (event) {
+                    if (event.target.closest('[data-project-like], [data-project-repository]')) {
+                        return;
+                    }
+                    if (event.target.closest('a')) {
+                        event.preventDefault();
+                    }
+                    open(card);
+                });
+
+                card.addEventListener('keydown', function (event) {
+                    if (event.target !== card || (event.key !== 'Enter' && event.key !== ' ')) {
+                        return;
+                    }
+                    event.preventDefault();
+                    open(card);
+                });
+            });
+
+            closeButton.addEventListener('click', close);
+            modal.addEventListener('click', function (event) {
+                if (event.target === modal) {
+                    close();
+                }
+            });
+
+            [repositoryLink, demoLink, projectLink].forEach(function (link) {
+                link.addEventListener('click', function (event) {
+                    event.stopPropagation();
+                    if (link.getAttribute('aria-disabled') === 'true') {
+                        event.preventDefault();
+                    }
+                });
+            });
+
+            document.addEventListener('keydown', function (event) {
+                if (modal.hidden) {
+                    return;
+                }
+
+                if (event.key === 'Escape') {
+                    event.preventDefault();
+                    close();
+                    return;
+                }
+
+                if (event.key !== 'Tab') {
+                    return;
+                }
+
+                var focusable = Array.prototype.slice.call(dialog.querySelectorAll(
+                    'button:not([disabled]):not([hidden]), a[href]:not([hidden])'
+                ));
+                if (!focusable.length) {
+                    event.preventDefault();
+                    dialog.focus();
+                    return;
+                }
+
+                var first = focusable[0];
+                var last = focusable[focusable.length - 1];
+                if (event.shiftKey && document.activeElement === first) {
+                    event.preventDefault();
+                    last.focus();
+                } else if (!event.shiftKey && document.activeElement === last) {
+                    event.preventDefault();
+                    first.focus();
+                }
+            });
         },
 
 
