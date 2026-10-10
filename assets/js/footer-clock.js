@@ -7,13 +7,19 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
     }
 
+    if (timeEl.dataset.clockInitialized === 'true') {
+        return;
+    }
+    timeEl.dataset.clockInitialized = 'true';
+
     function updateFooterInfo() {
         var now = new Date();
         var year = now.getFullYear();
-        var time = now.toLocaleTimeString([], {
-            hour: 'numeric',
+        var time = now.toLocaleTimeString('en-US', {
+            hour: '2-digit',
             minute: '2-digit',
-            second: '2-digit'
+            second: '2-digit',
+            hour12: true
         });
 
         yearEl.innerHTML = '&copy; ' + year + ' <a href="index.html" target="_self">Riazul Islam Tusar</a>. All Rights Reserved.';

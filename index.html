@@ -4,6 +4,18 @@
 
 <head>
 
+    <script>
+        (function () {
+            try {
+                if (window.localStorage.getItem('portfolio-theme') === 'light') {
+                    document.documentElement.classList.add('white-version');
+                }
+            } catch (error) {
+                console.error('Unable to restore the saved theme preference:', error);
+            }
+        }());
+    </script>
+
      <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -88,6 +100,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- CSS 
     ============================================ -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Nunito+Sans:wght@400&family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/vendor/bootstrap.min.css">
     <link rel="stylesheet" href="assets/css/vendor/slick.css">
     <link rel="stylesheet" href="assets/css/vendor/slick-theme.css">
@@ -134,6 +149,15 @@
                     </nav>
                     <!-- Start Header Right  -->
                     <div class="header-right">
+                        <button class="theme-toggle" type="button" aria-label="Toggle light and dark theme" aria-pressed="false" title="Toggle light and dark theme">
+                            <svg class="theme-toggle-icon theme-toggle-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                <circle cx="12" cy="12" r="4"></circle>
+                                <path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"></path>
+                            </svg>
+                            <svg class="theme-toggle-icon theme-toggle-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                <path d="M20.4 15.6A8.6 8.6 0 0 1 8.4 3.6 8.7 8.7 0 1 0 20.4 15.6Z"></path>
+                            </svg>
+                        </button>
                         <a class="rn-btn" target="_blank" href="#contacts"><span>Hire Me</span></a>
                         <div class="hamberger-menu d-block d-xl-none">
                             <i id="menuBtn" class="feather-menu humberger-menu"></i>
@@ -218,8 +242,11 @@
                         <div class="order-2 order-lg-1 col-lg-7 mt_md--50 mt_sm--50 mt_lg--30">
                             <div class="content">
                                 <div class="inner">
-                                    <span class="subtitle">HELLO!</span>
-                                    <h1 class="title">I’m <span class="hero-name">Riazul Islam</span><br>
+                                    <h1 class="title hero-title">
+                                        <span class="hero-name" aria-label="Riazul Islam.">
+                                            <span class="hero-name-first">Riazul</span>
+                                            <span class="hero-name-last">Islam<span class="hero-name-period">.</span></span>
+                                        </span>
                                         <span class="header-caption" id="page-top">
                                             <!-- type headline start-->
                                             <span class="cd-headline clip is-full-width">
@@ -271,7 +298,7 @@
                         <div class="order-1 order-lg-2 col-lg-5">
                             <div class="thumbnail">
                                 <div class="inner">
-                                    <img src="assets/images/3d/Saly-13.png" alt="Personal Portfolio Images">
+                                    <img src="assets/images/3d/Saly-13.png" alt="Portrait of Riazul Islam">
                                     <div class="availability-badge" aria-label="Available now for freelance projects and collaborations">
                                         <span class="availability-dot" aria-hidden="true"></span>
                                         <span class="availability-copy">
@@ -307,7 +334,7 @@
                     </div>
                     <div class="col-lg-8 col-xl-8 col-md-12">
                         <div class="about-me-content" data-aos="fade-up" data-aos-duration="700" data-aos-delay="200" data-aos-once="true">
-                            <span class="subtitle">ABOUT ME</span>
+                            <span class="subtitle editorial-section-heading"><span class="section-heading-line" aria-hidden="true"></span><span class="section-heading-text">ABOUT ME</span></span>
                             <h2 class="title">Computer Science Student with a Passion for Research</h2>
                             <p class="description">I’m Riazul Islam Tusar, a Computer Science and Engineering student with a strong interest in Artificial Intelligence, Machine Learning, Data Science, and research-oriented computing.
 
@@ -346,7 +373,7 @@ My long-term goal is to pursue graduate studies and develop a research-oriented 
                     <div class="col-lg-12">
                         <div class="section-title text-left">
                             <span class="subtitle">Expertise</span>
-                            <h2 class="title">Academic &amp; Professional Skills</h2>
+                            <h2 class="title editorial-section-heading"><span class="section-heading-line" aria-hidden="true"></span><span class="section-heading-text">Academic &amp; Professional Skills</span></h2>
                             <p class="skills-intro">My academic interests and professional experience combine artificial intelligence, data science, programming, research, and digital solutions to solve real-world problems.</p>
                         </div>
                     </div>
@@ -443,7 +470,7 @@ My long-term goal is to pursue graduate studies and develop a research-oriented 
                     <div class="col-lg-12">
                         <div class="section-title text-center" data-aos="fade-up" data-aos-duration="500" data-aos-delay="100" data-aos-once="true">
                             <span class="subtitle">Research Focus</span>
-                            <h2 class="title">Research Interests</h2>
+                            <h2 class="title editorial-section-heading"><span class="section-heading-line" aria-hidden="true"></span><span class="section-heading-text">Research Interests</span></h2>
                         </div>
                     </div>
                 </div>
@@ -515,15 +542,19 @@ My long-term goal is to pursue graduate studies and develop a research-oriented 
                     <div class="col-lg-12">
                         <div class="section-title text-center">
                             <span class="subtitle">Visit my portfolio and Top projects</span>
-                            <h2 class="title">My Projects</h2>
+                            <h2 class="title editorial-section-heading"><span class="section-heading-line" aria-hidden="true"></span><span class="section-heading-text">My Projects</span></h2>
                         </div>
                     </div>
                 </div>
 
                 <div class="row row--25 mt--10 mt_md--10 mt_sm--10">
+                    <!-- ==================================================
+                         PROJECT: AI and Data Science Research Project
+                         EDIT PROJECT LINKS IN THIS SECTION
+                    ================================================== -->
                     <!-- Start Single Portfolio -->
                     <div data-aos="fade-up" data-aos-delay="100" data-aos-once="true" class="col-lg-6 col-xl-4 col-md-6 col-12 mt--50 mt_md--30 mt_sm--30">
-                        <div class="rn-portfolio" data-project-id="ai-data-science-research" data-initial-likes="600" data-github-url="" data-live-demo-url="" data-project-url="" data-project-description="ADD_PROJECT_DESCRIPTION" data-project-technologies="">
+                        <div class="rn-portfolio" data-project-id="ai-data-science-research" data-initial-likes="600" data-project-url="" data-project-description="ADD_PROJECT_DESCRIPTION" data-project-technologies="">
                             <div class="inner">
                                 <div class="thumbnail">
                                     <a href="javascript:void(0)">
@@ -547,11 +578,24 @@ My long-term goal is to pursue graduate studies and develop a research-oriented 
                             </div>
                         </div>
                     </div>
-                    <!-- End Single Portfolio -->
+                    <!-- ========== PROJECT LINKS: AI AND DATA SCIENCE RESEARCH PROJECT ========== -->
+                    <div class="project-link-config" data-project-id="ai-data-science-research" hidden>
+                        <!-- >>> REPO LINK: PASTE YOUR GITHUB URL HERE <<< -->
+                        <!-- Leave empty until this project's repository URL is available. -->
+                        <span class="repo-url"></span>
+                        <!-- >>> LIVE DEMO: PASTE YOUR LIVE WEBSITE URL HERE <<< -->
+                        <!-- Leave empty until this project's live demo URL is available. -->
+                        <span class="live-demo-url"></span>
+                    </div>
+                    <!-- End Single Projects -->
 
-                    <!-- Start Single Portfolio -->
+                    <!-- ==================================================
+                         PROJECT: Explainable AI for Decision Support
+                         EDIT PROJECT LINKS IN THIS SECTION
+                    ================================================== -->
+                    <!-- Start Single Projects -->
                     <div data-aos="fade-up" data-aos-delay="300" data-aos-once="true" class="col-lg-6 col-xl-4 col-md-6 col-12 mt--50 mt_md--30 mt_sm--30">
-                        <div class="rn-portfolio" data-project-id="explainable-ai-decision-support" data-initial-likes="750" data-github-url="" data-live-demo-url="" data-project-url="" data-project-description="ADD_PROJECT_DESCRIPTION" data-project-technologies="">
+                        <div class="rn-portfolio" data-project-id="explainable-ai-decision-support" data-initial-likes="750" data-project-url="" data-project-description="ADD_PROJECT_DESCRIPTION" data-project-technologies="">
                             <div class="inner">
                                 <div class="thumbnail">
                                     <a href="javascript:void(0)">
@@ -575,11 +619,24 @@ My long-term goal is to pursue graduate studies and develop a research-oriented 
                             </div>
                         </div>
                     </div>
-                    <!-- End Single Portfolio -->
+                    <!-- ========== PROJECT LINKS: EXPLAINABLE AI FOR DECISION SUPPORT ========== -->
+                    <div class="project-link-config" data-project-id="explainable-ai-decision-support" hidden>
+                        <!-- >>> REPO LINK: PASTE YOUR GITHUB URL HERE <<< -->
+                        <!-- Leave empty until this project's repository URL is available. -->
+                        <span class="repo-url"></span>
+                        <!-- >>> LIVE DEMO: PASTE YOUR LIVE WEBSITE URL HERE <<< -->
+                        <!-- Leave empty until this project's live demo URL is available. -->
+                        <span class="live-demo-url"></span>
+                    </div>
+                    <!-- End Single Projects -->
 
-                    <!-- Start Single Portfolio -->
+                    <!-- ==================================================
+                         PROJECT: Predictive Analytics and Behavioral Modeling
+                         EDIT PROJECT LINKS IN THIS SECTION
+                    ================================================== -->
+                    <!-- Start Single Projects -->
                     <div data-aos="fade-up" data-aos-delay="500" data-aos-once="true" class="col-lg-6 col-xl-4 col-md-6 col-12 mt--50 mt_md--30 mt_sm--30">
-                        <div class="rn-portfolio" data-project-id="predictive-analytics-behavioral-modeling" data-initial-likes="630" data-github-url="" data-live-demo-url="" data-project-url="" data-project-description="ADD_PROJECT_DESCRIPTION" data-project-technologies="">
+                        <div class="rn-portfolio" data-project-id="predictive-analytics-behavioral-modeling" data-initial-likes="630" data-project-url="" data-project-description="ADD_PROJECT_DESCRIPTION" data-project-technologies="">
                             <div class="inner">
                                 <div class="thumbnail">
                                     <a href="javascript:void(0)">
@@ -603,11 +660,24 @@ My long-term goal is to pursue graduate studies and develop a research-oriented 
                             </div>
                         </div>
                     </div>
-                    <!-- End Single Portfolio -->
+                    <!-- ========== PROJECT LINKS: PREDICTIVE ANALYTICS AND BEHAVIORAL MODELING ========== -->
+                    <div class="project-link-config" data-project-id="predictive-analytics-behavioral-modeling" hidden>
+                        <!-- >>> REPO LINK: PASTE YOUR GITHUB URL HERE <<< -->
+                        <!-- Leave empty until this project's repository URL is available. -->
+                        <span class="repo-url"></span>
+                        <!-- >>> LIVE DEMO: PASTE YOUR LIVE WEBSITE URL HERE <<< -->
+                        <!-- Leave empty until this project's live demo URL is available. -->
+                        <span class="live-demo-url"></span>
+                    </div>
+                    <!-- End Single Projects -->
 
-                    <!-- Start Single Portfolio -->
+                    <!-- ==================================================
+                         PROJECT: Web Application and Interface Development
+                         EDIT PROJECT LINKS IN THIS SECTION
+                    ================================================== -->
+                    <!-- Start Single Projects -->
                     <div data-aos="fade-up" data-aos-delay="100" data-aos-once="true" class="col-lg-6 col-xl-4 col-md-6 col-12 mt--50 mt_md--30 mt_sm--30">
-                        <div class="rn-portfolio" data-project-id="web-application-interface-development" data-initial-likes="360" data-github-url="" data-live-demo-url="" data-project-url="" data-project-description="ADD_PROJECT_DESCRIPTION" data-project-technologies="">
+                        <div class="rn-portfolio" data-project-id="web-application-interface-development" data-initial-likes="360" data-project-url="" data-project-description="ADD_PROJECT_DESCRIPTION" data-project-technologies="">
                             <div class="inner">
                                 <div class="thumbnail">
                                     <a href="javascript:void(0)">
@@ -631,11 +701,24 @@ My long-term goal is to pursue graduate studies and develop a research-oriented 
                             </div>
                         </div>
                     </div>
-                    <!-- End Single Portfolio -->
+                    <!-- ========== PROJECT LINKS: WEB APPLICATION AND INTERFACE DEVELOPMENT ========== -->
+                    <div class="project-link-config" data-project-id="web-application-interface-development" hidden>
+                        <!-- >>> REPO LINK: PASTE YOUR GITHUB URL HERE <<< -->
+                        <!-- Leave empty until this project's repository URL is available. -->
+                        <span class="repo-url"></span>
+                        <!-- >>> LIVE DEMO: PASTE YOUR LIVE WEBSITE URL HERE <<< -->
+                        <!-- Leave empty until this project's live demo URL is available. -->
+                        <span class="live-demo-url"></span>
+                    </div>
+                    <!-- End Single Projects -->
 
-                    <!-- Start Single Portfolio -->
+                    <!-- ==================================================
+                         PROJECT: Academic Research in AI and Data Science
+                         EDIT PROJECT LINKS IN THIS SECTION
+                    ================================================== -->
+                    <!-- Start Single Projects -->
                     <div data-aos="fade-up" data-aos-delay="300" data-aos-once="true" class="col-lg-6 col-xl-4 col-md-6 col-12 mt--50 mt_md--30 mt_sm--30">
-                        <div class="rn-portfolio" data-project-id="academic-research-ai-data-science" data-initial-likes="280" data-github-url="" data-live-demo-url="" data-project-url="" data-project-description="ADD_PROJECT_DESCRIPTION" data-project-technologies="">
+                        <div class="rn-portfolio" data-project-id="academic-research-ai-data-science" data-initial-likes="280" data-project-url="" data-project-description="ADD_PROJECT_DESCRIPTION" data-project-technologies="">
                             <div class="inner">
                                 <div class="thumbnail">
                                     <a href="javascript:void(0)">
@@ -659,11 +742,24 @@ My long-term goal is to pursue graduate studies and develop a research-oriented 
                             </div>
                         </div>
                     </div>
-                    <!-- End Single Portfolio -->
+                    <!-- ========== PROJECT LINKS: ACADEMIC RESEARCH IN AI AND DATA SCIENCE ========== -->
+                    <div class="project-link-config" data-project-id="academic-research-ai-data-science" hidden>
+                        <!-- >>> REPO LINK: PASTE YOUR GITHUB URL HERE <<< -->
+                        <!-- Leave empty until this project's repository URL is available. -->
+                        <span class="repo-url"></span>
+                        <!-- >>> LIVE DEMO: PASTE YOUR LIVE WEBSITE URL HERE <<< -->
+                        <!-- Leave empty until this project's live demo URL is available. -->
+                        <span class="live-demo-url"></span>
+                    </div>
+                    <!-- End Single Projects -->
 
-                    <!-- Start Single Portfolio -->
+                    <!-- ==================================================
+                         PROJECT: Open-Source and Technical Exploration
+                         EDIT PROJECT LINKS IN THIS SECTION
+                    ================================================== -->
+                    <!-- Start Single Projects -->
                     <div data-aos="fade-up" data-aos-delay="500" data-aos-once="true" class="col-lg-6 col-xl-4 col-md-6 col-12 mt--50 mt_md--30 mt_sm--30">
-                        <div class="rn-portfolio" data-project-id="opensource-technical-exploration" data-initial-likes="690" data-github-url="" data-live-demo-url="" data-project-url="" data-project-description="ADD_PROJECT_DESCRIPTION" data-project-technologies="">
+                        <div class="rn-portfolio" data-project-id="opensource-technical-exploration" data-initial-likes="690" data-project-url="" data-project-description="ADD_PROJECT_DESCRIPTION" data-project-technologies="">
                             <div class="inner">
                                 <div class="thumbnail">
                                     <a href="javascript:void(0)">
@@ -687,11 +783,20 @@ My long-term goal is to pursue graduate studies and develop a research-oriented 
                             </div>
                         </div>
                     </div>
-                    <!-- End Single Portfolio -->
+                    <!-- ========== PROJECT LINKS: OPEN-SOURCE AND TECHNICAL EXPLORATION ========== -->
+                    <div class="project-link-config" data-project-id="opensource-technical-exploration" hidden>
+                        <!-- >>> REPO LINK: PASTE YOUR GITHUB URL HERE <<< -->
+                        <!-- Leave empty until this project's repository URL is available. -->
+                        <span class="repo-url"></span>
+                        <!-- >>> LIVE DEMO: PASTE YOUR LIVE WEBSITE URL HERE <<< -->
+                        <!-- Leave empty until this project's live demo URL is available. -->
+                        <span class="live-demo-url"></span>
+                    </div>
+                    <!-- End Single Projects -->
                 </div>
             </div>
         </div>
-        <!-- End portfolio Area -->
+        <!-- End projects Area -->
 
         <div class="project-details-modal" id="project-details-modal" aria-hidden="true" hidden>
             <div class="project-details-dialog" role="dialog" aria-modal="true" aria-labelledby="project-details-title" tabindex="-1">
@@ -742,36 +847,38 @@ My long-term goal is to pursue graduate studies and develop a research-oriented 
                     <div class="col-lg-12">
                         <div class="section-title text-center" data-aos="fade-up" data-aos-duration="500" data-aos-delay="100" data-aos-once="true">
                             <span class="subtitle">Profile details</span>
-                            <h2 class="title">Certifications & Languages</h2>
+                            <h2 class="title editorial-section-heading"><span class="section-heading-line" aria-hidden="true"></span><span class="section-heading-text">Certifications &amp; Languages</span></h2>
                         </div>
                     </div>
                 </div>
                 <div class="row row--25 mt_md--10 mt_sm--10">
+                    <!-- Click the Certifications card below to open the certificate gallery.
+                         Edit certificate details in the CERTIFICATE DETAILS section of assets/js/main.js. -->
                     <div data-aos="fade-up" data-aos-duration="500" data-aos-delay="100" data-aos-once="true" class="col-lg-6 col-md-6 col-12 mt--50 mt_md--30 mt_sm--30">
                         <div class="rn-service">
                             <div class="inner">
                                 <div class="icon"><i data-feather="award"></i></div>
                                 <div class="content">
                                     <h4 class="title"><a href="javascript:void(0)">Certifications</a></h4>
-                                    <p class="description">No formal certifications were listed in the available academic and professional profile information.</p>
+                                    <p class="description">Open the certificate gallery to view certificate images and details.</p>
                                     <a class="read-more-button" href="javascript:void(0)"><i class="feather-arrow-right"></i></a>
                                 </div>
                             </div>
-                            <a class="over-link" href="javascript:void(0)"></a>
+                            <a class="over-link" href="#certificate-viewer" data-certificate-viewer-trigger role="button" aria-haspopup="dialog" aria-controls="certificate-viewer" aria-label="View certificates"></a>
                         </div>
                     </div>
 
                     <div data-aos="fade-up" data-aos-duration="500" data-aos-delay="200" data-aos-once="true" class="col-lg-6 col-md-6 col-12 mt--50 mt_md--30 mt_sm--30">
                         <div class="rn-service">
                             <div class="inner">
-                                <div class="icon"><i data-feather="globe"></i></div>
+                                <div class="icon"><i data-feather="code"></i></div>
                                 <div class="content">
                                     <h4 class="title"><a href="javascript:void(0)">Languages</a></h4>
-                                    <p class="description">No specific language profile was listed in the available profile information; the portfolio content remains aligned with the current academic and professional data available.</p>
+                                    <p class="description">Watch the dragon eat its way through a trail of technical skills.</p>
                                     <a class="read-more-button" href="javascript:void(0)"><i class="feather-arrow-right"></i></a>
                                 </div>
                             </div>
-                            <a class="over-link" href="javascript:void(0)"></a>
+                            <a class="over-link" href="#academic-skills-dialog" data-academic-skills-trigger role="button" aria-haspopup="dialog" aria-controls="academic-skills-dialog" aria-label="View academic and technical skills"></a>
                         </div>
                     </div>
                 </div>
@@ -785,8 +892,8 @@ My long-term goal is to pursue graduate studies and develop a research-oriented 
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="section-title text-center">
-                            <span class="subtitle">Years of Experience</span>
-                            <h2 class="title">My Resume</h2>
+                            <span class="subtitle">ACADEMIC &amp; PROFESSIONAL HISTORY</span>
+                            <h2 class="title editorial-section-heading resume-editorial-title"><span class="section-heading-line" aria-hidden="true"></span><span class="section-heading-text">Chronology of<br><em>Milestones &amp; Growth</em></span></h2>
                         </div>
                     </div>
                 </div>
@@ -817,7 +924,7 @@ My long-term goal is to pursue graduate studies and develop a research-oriented 
                                         <div class="col-lg-6 col-md-12 col-12">
                                             <div class="content">
                                                 <span class="subtitle">2019 - 2027</span>
-                                                <h4 class="maintitle">Education Quality</h4>
+                                                <h4 class="maintitle"><span class="section-heading-line" aria-hidden="true"></span><span class="section-heading-text">Education Quality</span></h4>
                                                 <div class="experience-list">
 
                                                     <!-- Start Single List  -->
@@ -894,7 +1001,7 @@ Developed foundational knowledge in science, mathematics, analytical thinking, a
                                         <div class="col-lg-6 col-md-12 col-12 mt_md--60 mt_sm--60">
                                             <div class="content">
                                                 <span class="subtitle">2024 - Now</span>
-                                                <h4 class="maintitle">Job Experience</h4>
+                                                <h4 class="maintitle"><span class="section-heading-line" aria-hidden="true"></span><span class="section-heading-text">Job Experience</span></h4>
                                                 <div class="experience-list">
 
                                                     <!-- Start Single List  -->
@@ -970,7 +1077,7 @@ Developed foundational knowledge in science, mathematics, analytical thinking, a
                                             <div class="progress-wrapper">
                                                 <div class="content">
                                                     <span class="subtitle">Features</span>
-                                                    <h4 class="maintitle">My Expertise</h4>
+                                                    <h4 class="maintitle"><span class="section-heading-line" aria-hidden="true"></span><span class="section-heading-text">My Expertise</span></h4>
                                                     <!-- Start Single Progress Charts -->
                                                     <div class="progress-charts">
                                                         <h6 class="heading heading-h6">Programming</h6>
@@ -1031,7 +1138,7 @@ Developed foundational knowledge in science, mathematics, analytical thinking, a
                                             <div class="progress-wrapper">
                                                 <div class="content">
                                                     <span class="subtitle">Features</span>
-                                                    <h4 class="maintitle">Development Skill</h4>
+                                                    <h4 class="maintitle"><span class="section-heading-line" aria-hidden="true"></span><span class="section-heading-text">Development Skill</span></h4>
                                                     <!-- Start Single Progress Charts -->
                                                     <div class="progress-charts">
                                                         <h6 class="heading heading-h6">Java</h6>
@@ -1100,7 +1207,7 @@ Developed foundational knowledge in science, mathematics, analytical thinking, a
                                         <div class="col-lg-6 col-md-12 col-12">
                                             <div class="content">
                                                 <span class="subtitle">2023 - Now</span>
-                                                <h4 class="maintitle">Tools Experience</h4>
+                                                <h4 class="maintitle"><span class="section-heading-line" aria-hidden="true"></span><span class="section-heading-text">Tools Experience</span></h4>
                                                 <div class="experience-list">
 
                                                     <!-- Start Single List  -->
@@ -1163,7 +1270,7 @@ Developed foundational knowledge in science, mathematics, analytical thinking, a
                                         <div class="col-lg-6 col-md-12 col-12 mt_md--60 mt_sm--60">
                                             <div class="content">
                                                 <span class="subtitle">2024 - Now</span>
-                                                <h4 class="maintitle">Job Experience</h4>
+                                                <h4 class="maintitle"><span class="section-heading-line" aria-hidden="true"></span><span class="section-heading-text">Job Experience</span></h4>
                                                 <div class="experience-list">
 
                                                     <!-- Start Single List  -->
@@ -1234,7 +1341,7 @@ Developed foundational knowledge in science, mathematics, analytical thinking, a
                                         <div class="col-lg-6 col-md-12 col-12">
                                             <div class="content">
                                                 <span class="subtitle">2023 - Now</span>
-                                                <h4 class="maintitle">Platform Performance</h4>
+                                                <h4 class="maintitle"><span class="section-heading-line" aria-hidden="true"></span><span class="section-heading-text">Platform Performance</span></h4>
                                                 <div class="experience-list">
 
                                                     <!-- Start Single List  -->
@@ -1297,7 +1404,7 @@ Developed foundational knowledge in science, mathematics, analytical thinking, a
                                         <div class="col-lg-6 col-md-12 col-12 mt_md--60 mt_sm--60">
                                             <div class="content">
                                                 <span class="subtitle">2024 - Now</span>
-                                                <h4 class="maintitle">Work Performance</h4>
+                                                <h4 class="maintitle"><span class="section-heading-line" aria-hidden="true"></span><span class="section-heading-text">Work Performance</span></h4>
                                                 <div class="experience-list">
 
                                                     <!-- Start Single List  -->
@@ -1373,7 +1480,7 @@ Developed foundational knowledge in science, mathematics, analytical thinking, a
                     <div class="col-lg-12">
                         <div class="section-title text-center">
                             <span class="subtitle">Professional Skillset</span>
-                            <h2 class="title">Technical Precision & Arsenal</h2>
+                            <h2 class="title editorial-section-heading"><span class="section-heading-line" aria-hidden="true"></span><span class="section-heading-text">Technical Precision &amp; Arsenal</span></h2>
                         </div>
                     </div>
                 </div>
@@ -1391,7 +1498,7 @@ Developed foundational knowledge in science, mathematics, analytical thinking, a
             <div class="container">
                 <div class="section-title text-center" data-aos="fade-up" data-aos-duration="500" data-aos-once="true">
                     <span class="subtitle">RESEARCH &amp; ACADEMIC FOCUS</span>
-                    <h2 class="title">Research &amp; Academic Interests</h2>
+                    <h2 class="title editorial-section-heading"><span class="section-heading-line" aria-hidden="true"></span><span class="section-heading-text">Research &amp; Academic Interests</span></h2>
                     <p class="research-academic-intro">As a Computer Science and Engineering student, I am interested in exploring intelligent systems, data-driven methods, and research-oriented computing to understand and solve real-world problems.</p>
                 </div>
                 <div class="research-interest-grid">
@@ -1508,7 +1615,7 @@ Developed foundational knowledge in science, mathematics, analytical thinking, a
                     <div class="col-lg-12">
                         <div data-aos="fade-up" data-aos-duration="500" data-aos-delay="500" data-aos-once="true" class="section-title text-center">
                             <span class="subtitle">Visit my blog and keep your feedback</span>
-                            <h2 class="title">My Blog</h2>
+                            <h2 class="title editorial-section-heading"><span class="section-heading-line" aria-hidden="true"></span><span class="section-heading-text">My Blog</span></h2>
                         </div>
                     </div>
                 </div>
@@ -1603,7 +1710,7 @@ Developed foundational knowledge in science, mathematics, analytical thinking, a
                     <div class="col-lg-12">
                         <div data-aos="fade-up" data-aos-duration="500" data-aos-delay="400" data-aos-once="true" class="section-title text-center">
                             <span class="subtitle">Capture Moments • Creative Journey</span>
-                            <h2 class="title">Photos</h2>
+                            <h2 class="title editorial-section-heading"><span class="section-heading-line" aria-hidden="true"></span><span class="section-heading-text">Photos</span></h2>
                         </div>
                     </div>
                 </div>
@@ -1623,7 +1730,7 @@ Developed foundational knowledge in science, mathematics, analytical thinking, a
                     <div class="col-lg-12">
                         <div class="section-title text-center">
                             <span class="subtitle">Contact</span>
-                            <h2 class="title">Contact With Me</h2>
+                            <h2 class="title editorial-section-heading"><span class="section-heading-line" aria-hidden="true"></span><span class="section-heading-text">Contact With Me</span></h2>
                         </div>
                     </div>
                 </div>
@@ -1773,10 +1880,11 @@ Developed foundational knowledge in science, mathematics, analytical thinking, a
                             <div class="footer-copyright">
                                 <p id="footer-year" class="description"></p>
                             </div>
-                            <div class="footer-status">
-                                <span class="status-dot"></span>
+                            <div class="footer-status footer-clock" aria-label="Current local time in Bangladesh">
+                                <span class="status-dot footer-time-indicator" aria-hidden="true"></span>
                                 <span id="footer-time" class="footer-time"></span>
-                                <span class="footer-location">• BANGLADESH</span>
+                                <span class="footer-clock-separator" aria-hidden="true">·</span>
+                                <span class="footer-location">BANGLADESH</span>
                             </div>
                         </div>
                     </div>
@@ -1796,7 +1904,8 @@ Developed foundational knowledge in science, mathematics, analytical thinking, a
     <script src="assets/js/vendor/wow.js"></script>
     <script src="assets/js/vendor/aos.js"></script>
     <script src="assets/js/vendor/particles.js"></script>
-    <!-- main JS -->
+    <!-- Certificate gallery data is maintained only in assets/js/main.js.
+         Search there for "CERTIFICATE DETAILS — EDIT THIS SECTION" to edit or add entries. -->
     <script src="assets/js/main.js"></script>
     <script src="assets/js/footer-clock.js"></script>
 </body>
