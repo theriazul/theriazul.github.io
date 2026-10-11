@@ -872,33 +872,58 @@
             }
 
             // =========================================================
-            // DRAGON SKILLS — EDIT THIS SECTION
-            // Skill names are eaten in this exact order; add, remove, or reorder strings here.
-            // Adjust travelDurationMs, eatDurationMs, pauseDurationMs, and dragonSizePx
-            // to change the movement, bite, pause, and large dragon size.
+            // CONTRIBUTION GRAPH SKILLS — EDIT THIS ARRAY
+            // Add, remove, or rename skills to update the graph cell labels.
             // =========================================================
             var academicSkills = [
+                'AI',
+                'Machine Learning',
+                'Data Science',
+                'HTML',
+                'CSS',
                 'C',
                 'C++',
                 'Python',
                 'Java',
                 'JavaScript',
-                'HTML',
-                'CSS',
-                'AI',
-                'ML',
-                'Data Science',
+                'TypeScript',
                 'Node.js',
                 'React',
                 'MongoDB',
                 'SQL',
-                'Data Structures & Algorithms'
+                'Git',
+                'GitHub',
+                'Deep Learning',
+                'NLP',
+                'Computer Vision',
+                'Algorithms',
+                'Data Structures',
+                'Express.js',
+                'PostgreSQL',
+                'MySQL',
+                'REST APIs',
+                'JSON',
+                'Linux',
+                'Bash',
+                'Statistics',
+                'Pandas',
+                'NumPy',
+                'Scikit-learn',
+                'TensorFlow',
+                'PyTorch',
+                'Explainable AI',
+                'Predictive Analytics',
+                'Data Visualization',
+                'Object-Oriented Programming',
+                'Web Development',
+                'Software Engineering',
+                'Problem Solving'
             ];
             var animationSettings = {
-                travelDurationMs: 1050,
-                eatDurationMs: 760,
-                pauseDurationMs: 350,
-                dragonSizePx: 270
+                travelDurationMs: 700,
+                eatDurationMs: 460,
+                pauseDurationMs: 280,
+                dragonSizePx: 140
             };
             var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
             var dialog = document.createElement('dialog');
@@ -911,14 +936,27 @@
                 '  <button class="academic-skills-close" type="button" aria-label="Close skills visualization">×</button>',
                 '  <header class="academic-skills-header">',
                 '    <p class="academic-skills-eyebrow">Dragon skill feast</p>',
-                '    <h2 id="academic-skills-title">The Dragon Eats Its Way Through Tech</h2>',
-                '    <p class="academic-skills-note">Watch the dragon approach and eat each skill box in order.</p>',
+                '    <h2 id="academic-skills-title">The Dragon Eats Its Way Through Code</h2>',
+                '    <p class="academic-skills-note">Watch the dragon explore the contributions graph and consume CSE skills one by one.</p>',
                 '  </header>',
                 '  <div class="academic-skills-controls">',
                 '    <button class="academic-skills-control academic-skills-replay" type="button">Replay animation</button>',
                 '    <button class="academic-skills-control academic-skills-pause" type="button" aria-pressed="false">Pause dragon</button>',
                 '  </div>',
-                '  <div class="academic-skills-feast" role="list" aria-label="Skills waiting for the dragon"></div>',
+                '  <section class="academic-skills-graph" aria-label="Annual CSE contributions graph">',
+                '    <div class="academic-skills-graph-scroll" tabindex="0" aria-label="Scrollable annual contributions graph">',
+                '      <div class="academic-skills-graph-canvas">',
+                '        <div class="academic-skills-months" aria-hidden="true"></div>',
+                '        <div class="academic-skills-calendar">',
+                '          <div class="academic-skills-weekdays" aria-hidden="true"><span>Mon</span><span></span><span>Wed</span><span></span><span>Fri</span><span></span><span></span></div>',
+                '          <div class="academic-skills-feast" role="group" aria-label="CSE skills by contribution day"></div>',
+                '        </div>',
+                '      </div>',
+                '    </div>',
+                '    <div class="academic-skills-legend" aria-label="Contribution activity legend">',
+                '      <span>Less</span><i class="contribution-level-1" aria-hidden="true"></i><i class="contribution-level-2" aria-hidden="true"></i><i class="contribution-level-3" aria-hidden="true"></i><i class="contribution-level-4" aria-hidden="true"></i><span>More</span>',
+                '    </div>',
+                '  </section>',
                 '  <p class="academic-skills-status" aria-live="polite"></p>',
                 '</div>'
             ].join('');
@@ -928,6 +966,7 @@
             var replayButton = dialog.querySelector('.academic-skills-replay');
             var pauseButton = dialog.querySelector('.academic-skills-pause');
             var chart = dialog.querySelector('.academic-skills-feast');
+            var months = dialog.querySelector('.academic-skills-months');
             var status = dialog.querySelector('.academic-skills-status');
             var skillItems = [];
             var dragonFrame = 0;
@@ -938,6 +977,9 @@
             var phaseElapsed = 0;
             var routeFrom = { x: 0, y: 0 };
             var routeTo = { x: 0, y: 0 };
+            var routeControlStart = { x: 0, y: 0 };
+            var routeControlEnd = { x: 0, y: 0 };
+            var currentTravelDuration = 700;
             var dragonPosition = { x: 0, y: 0 };
             var lastFrameTime = 0;
             var activeTrigger = null;
@@ -945,174 +987,192 @@
             var originalBodyPaddingRight = '';
             var closeTimer = null;
 
-            academicSkills.forEach(function (skill, index) {
-                var item = document.createElement('div');
-                var label = document.createElement('span');
-                var accent = document.createElement('span');
-                item.className = 'academic-skill-box';
-                item.setAttribute('role', 'listitem');
-                item.style.setProperty('--skill-index', index);
-                item.dataset.skillIndex = index;
-                label.className = 'academic-skill-box-label';
-                label.textContent = skill;
-                accent.className = 'academic-skill-box-accent';
-                accent.setAttribute('aria-hidden', 'true');
-                item.appendChild(label);
-                item.appendChild(accent);
-                chart.appendChild(item);
-                skillItems.push({ item: item });
+            var graphYear = new Date().getFullYear();
+            var yearStart = new Date(graphYear, 0, 1);
+            var yearEnd = new Date(graphYear, 11, 31);
+            var graphStart = new Date(yearStart);
+            graphStart.setDate(graphStart.getDate() - ((graphStart.getDay() + 6) % 7));
+            var graphEnd = new Date(yearEnd);
+            graphEnd.setDate(graphEnd.getDate() + ((7 - graphEnd.getDay()) % 7));
+            var graphStartUtc = Date.UTC(graphStart.getFullYear(), graphStart.getMonth(), graphStart.getDate());
+            var weekCount = Math.round((
+                Date.UTC(graphEnd.getFullYear(), graphEnd.getMonth(), graphEnd.getDate()) - graphStartUtc
+            ) / (7 * 24 * 60 * 60 * 1000)) + 1;
+            var graphDayIndex = 0;
+            var activityLabels = ['', 'Light', 'Moderate', 'High', 'Very high'];
+            var dateFormatter = new Intl.DateTimeFormat('en', {
+                month: 'long',
+                day: 'numeric',
+                year: 'numeric'
+            });
+
+            chart.style.setProperty('--week-count', weekCount);
+            months.style.setProperty('--week-count', weekCount);
+            for (var monthIndex = 0; monthIndex < 12; monthIndex += 1) {
+                var monthDate = new Date(graphYear, monthIndex, 1);
+                var monthLabel = document.createElement('span');
+                var monthWeek = Math.floor((
+                    Date.UTC(monthDate.getFullYear(), monthDate.getMonth(), monthDate.getDate()) - graphStartUtc
+                ) / (7 * 24 * 60 * 60 * 1000));
+                monthLabel.className = 'academic-skills-month';
+                monthLabel.textContent = monthDate.toLocaleString('en', { month: 'long' });
+                monthLabel.style.left = (monthWeek * 14) + 'px';
+                months.appendChild(monthLabel);
+            }
+
+            for (var week = 0; week < weekCount; week += 1) {
+                for (var weekday = 0; weekday < 7; weekday += 1) {
+                    var date = new Date(graphStart);
+                    date.setDate(graphStart.getDate() + week * 7 + weekday);
+                    if (date.getFullYear() !== graphYear) {
+                        var emptyCell = document.createElement('span');
+                        emptyCell.className = 'academic-skill-box is-empty';
+                        emptyCell.setAttribute('aria-hidden', 'true');
+                        chart.appendChild(emptyCell);
+                        continue;
+                    }
+
+                    if (!academicSkills.length) {
+                        var missingSkillCell = document.createElement('span');
+                        missingSkillCell.className = 'academic-skill-box is-empty';
+                        missingSkillCell.setAttribute('aria-hidden', 'true');
+                        chart.appendChild(missingSkillCell);
+                        continue;
+                    }
+
+                    var skill = academicSkills[graphDayIndex % academicSkills.length];
+                    var activity = 1 + ((graphDayIndex * 7 + week * 3 + skill.length) % 4);
+                    var item = document.createElement('button');
+                    var accessibleLabel = skill + ' — ' + activityLabels[activity] +
+                        ' contribution activity on ' + dateFormatter.format(date);
+                    item.type = 'button';
+                    item.className = 'academic-skill-box contribution-cell level-' + activity;
+                    item.setAttribute('aria-label', accessibleLabel);
+                    item.setAttribute('title', accessibleLabel);
+                    item.dataset.tooltip = skill + ' · ' + activityLabels[activity] +
+                        ' · ' + dateFormatter.format(date);
+                    item.dataset.skill = skill;
+                    item.dataset.activity = activity;
+                    item.dataset.intensity = activity;
+                    item.dataset.date = dateFormatter.format(date);
+                    chart.appendChild(item);
+                    skillItems.push({ item: item });
+                    graphDayIndex += 1;
+                }
+            }
+
+            chart.addEventListener('click', function (event) {
+                var selectedCell = event.target.closest('.contribution-cell');
+                if (!selectedCell || !chart.contains(selectedCell)) {
+                    return;
+                }
+                var previousSelection = chart.querySelector('.contribution-cell.is-selected');
+                if (previousSelection) {
+                    previousSelection.classList.remove('is-selected');
+                }
+                selectedCell.classList.add('is-selected');
+                status.textContent = selectedCell.dataset.tooltip;
             });
 
             var dragonWrap = document.createElement('div');
             dragonWrap.className = 'academic-skills-dragon';
             dragonWrap.setAttribute('aria-hidden', 'true');
             dragonWrap.innerHTML = [
-                '<svg viewBox="0 0 360 230" focusable="false">',
-                '  <defs>',
-                '    <linearGradient id="feast-dragon-scales" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffc08a"/><stop offset=".2" stop-color="#de7549"/><stop offset=".62" stop-color="#a74330"/><stop offset="1" stop-color="#4e201d"/></linearGradient>',
-                '    <linearGradient id="feast-dragon-wing-far" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a44a3b"/><stop offset=".5" stop-color="#65302a"/><stop offset="1" stop-color="#291719"/></linearGradient>',
-                '    <linearGradient id="feast-dragon-wing-near" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f3a16b"/><stop offset=".38" stop-color="#bd5839"/><stop offset=".76" stop-color="#783127"/><stop offset="1" stop-color="#3a1b1c"/></linearGradient>',
-                '    <linearGradient id="feast-dragon-tail" x1=".2" y1="0" x2=".75" y2="1"><stop offset="0" stop-color="#e48958"/><stop offset=".35" stop-color="#b94d34"/><stop offset=".76" stop-color="#803329"/><stop offset="1" stop-color="#421d1b"/></linearGradient>',
-                '    <linearGradient id="feast-dragon-tail-highlight" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd09a" stop-opacity=".68"/><stop offset="1" stop-color="#f0a06c" stop-opacity=".04"/></linearGradient>',
-                '    <pattern id="feast-dragon-scales-pattern" width="18" height="14" patternUnits="userSpaceOnUse"><path d="M1 2q8 11 16 0M-8 9q8 11 16 0M10 9q8 11 16 0" fill="none" stroke="#ffd09a" stroke-opacity=".28" stroke-width="1"/></pattern>',
-                '  </defs>',
-                '  <g class="dragon-wing-far">',
-                '    <path class="dragon-wing-membrane dragon-wing-membrane-far" d="M159 119Q148 94 125 66L65 19Q89 66 91 103L35 55Q64 111 111 143L164 151Z"/>',
-                '    <path class="dragon-wing-bone dragon-wing-bone-far" d="M159 127 125 66 65 19M125 66 91 103 35 55M125 66 145 134M91 103 117 143"/>',
-                '    <path class="dragon-wing-knuckle" d="m65 19-9-14m9 14 13-8M35 55 18 49"/>',
+                '<svg class="dragon-redesign" viewBox="0 0 720 420" role="presentation" focusable="false" aria-hidden="true">',
+                '  <defs><pattern id="dragon-redesign-scales" width="18" height="14" patternUnits="userSpaceOnUse"><path d="M-2 1 Q7 12 16 1 M7 8 Q16 19 25 8" fill="none" stroke="currentColor" stroke-opacity=".42" stroke-width="1.8"/></pattern></defs>',
+                '  <g class="dragon-redesign-wing dragon-redesign-wing-far">',
+                '    <path class="dragon-redesign-wing-membrane" d="M425 245 Q393 219 383 183 L323 99 Q354 100 382 125 L367 53 Q399 76 416 128 L435 33 Q461 75 448 130 L501 83 Q498 125 465 166 Q460 207 442 247 Z"/>',
+                '    <path class="dragon-redesign-wing-rib dragon-redesign-wing-rib-a" d="M425 245 Q405 197 323 99"/>',
+                '    <path class="dragon-redesign-wing-rib dragon-redesign-wing-rib-b" d="M420 232 Q405 175 367 53"/>',
+                '    <path class="dragon-redesign-wing-rib dragon-redesign-wing-rib-c" d="M425 235 Q426 177 435 33"/>',
+                '    <path class="dragon-redesign-wing-rib dragon-redesign-wing-rib-d" d="M432 237 Q455 186 501 83"/>',
+                '    <path class="dragon-redesign-wing-edge" d="M323 99 Q354 100 382 125 M367 53 Q399 76 416 128 M435 33 Q461 75 448 130 M501 83 Q498 125 465 166"/>',
+                '    <path class="dragon-redesign-wing-knuckles" d="M382 125 Q398 137 416 128 Q432 139 448 130 M383 183 Q408 194 432 183 Q451 185 465 166"/>',
                 '  </g>',
-                '  <g class="dragon-tail">',
-                '    <path class="dragon-tail-main" d="M154 137C128 136 102 143 72 157 38 173 1 185-45 177c16 15 39 21 67 17 44-6 83-30 121-39l20-10z"/>',
-                '    <path class="dragon-tail-spade" d="M-45 177c-20-7-39-22-54-43 3 24 10 39 22 48-14 9-23 21-29 37 22-7 43-19 61-35z"/>',
-                '    <path class="dragon-tail-highlight" d="M145 140c-38 3-63 19-96 33-28 12-53 16-77 9"/>',
-                '    <path class="dragon-tail-ridge" d="M140 150c-33 13-57 30-91 39-22 6-39 7-54 3"/>',
-                '    <path class="dragon-tail-scales" d="m125 145-8 11m-5-13-9 13m-3-16-9 15m-4-18-10 17m-3-19-11 19m-5-17-10 19m-5-14-10 19m-5-14-10 18m-5-12-10 16m-6-10-10 13m-6-9-10 10"/>',
-                '    <path class="dragon-tail-armor" d="m132 141-6-13 16 9 9-13 8 18m-38 2-8-12 15 7 7-14 8 16m-41 2-8-11 15 7 7-12 7 14"/>',
-                '    <g class="dragon-tail-tip">',
-                '      <path class="dragon-tail-tip-plate" d="M-57 179q-17-8-31-25l3 22q5 12 15 16l-18 19q18-7 34-21l13-12z"/>',
-                '      <path class="dragon-tail-tip-edge" d="m-87 155 13 17m-14 36 19-15"/>',
+                '  <g class="dragon-redesign-limb dragon-redesign-leg-far dragon-redesign-hind-leg">',
+                '    <path class="dragon-redesign-leg-bone" d="M290 254 Q270 271 268 290"/>',
+                '    <circle class="dragon-redesign-joint" cx="268" cy="290" r="6"/>',
+                '    <path class="dragon-redesign-leg-shin" d="M268 290 Q274 306 267 326"/>',
+                '    <path class="dragon-redesign-claws" d="M267 326 Q251 330 243 322l-6 7 15-1 4 6 5-3 7 3 5-7"/>',
+                '  </g>',
+                '  <g class="dragon-redesign-limb dragon-redesign-leg-far dragon-redesign-fore-leg">',
+                '    <path class="dragon-redesign-leg-bone" d="M458 238 Q444 255 450 276"/>',
+                '    <circle class="dragon-redesign-joint" cx="450" cy="276" r="6"/>',
+                '    <path class="dragon-redesign-leg-shin" d="M450 276 Q463 293 457 315"/>',
+                '    <path class="dragon-redesign-claws" d="M457 315 Q443 321 434 314l-5 7 15-1 4 6 5-3 7 2 5-6"/>',
+                '  </g>',
+                '  <g class="dragon-redesign-body">',
+                '    <g class="dragon-redesign-tail">',
+                '      <path class="dragon-redesign-tail-fill" d="M275 260 C246 279 220 302 183 312 C132 328 70 321 16 288 C57 301 103 301 148 290 C199 278 238 253 266 241 Z"/>',
+                '      <path class="dragon-redesign-tail-scales" d="M275 260 C246 279 220 302 183 312 C132 328 70 321 16 288 C57 301 103 301 148 290 C199 278 238 253 266 241 Z"/>',
+                '      <path class="dragon-redesign-tail-spikes" d="M23 291 Q28 284 29 280 Q35 286 37 293 Z M39 294 Q45 284 46 279 Q52 286 55 295 Z M57 297 Q64 285 65 280 Q72 288 76 299 Z M79 298 Q87 285 88 279 Q96 287 99 299 Z M102 296 Q111 282 112 276 Q120 284 124 296 Z M127 291 Q137 277 138 271 Q146 280 150 291 Z M153 284 Q163 270 164 263 Q172 273 176 284 Z M179 276 Q190 261 191 254 Q199 264 203 276 Z M205 267 Q217 251 218 244 Q226 255 230 267 Z M231 257 Q244 241 245 234 Q253 245 257 257 Z M258 249 Q270 233 271 226 Q279 238 282 249 Z"/>',
+                '      <path class="dragon-redesign-tail-ridge" d="M29 291 Q91 308 150 293 T270 253"/>',
+                '    </g>',
+                '    <path class="dragon-redesign-body-outline" d="M258 258 C298 278 324 258 356 239 C389 219 414 238 444 251 C477 265 502 238 526 216 Q543 198 551 174"/>',
+                '    <path class="dragon-redesign-body-main" d="M258 258 C298 278 324 258 356 239 C389 219 414 238 444 251 C477 265 502 238 526 216 Q543 198 551 174"/>',
+                '    <path class="dragon-redesign-body-scales" d="M258 258 C298 278 324 258 356 239 C389 219 414 238 444 251 C477 265 502 238 526 216 Q543 198 551 174"/>',
+                '    <path class="dragon-redesign-belly" d="M273 268 Q310 279 344 253 T400 235 Q423 238 446 260 Q482 277 515 238"/>',
+                '    <path class="dragon-redesign-spines" d="M270 258 Q277 248 278 242 Q285 250 288 262 Z M292 262 Q300 249 301 243 Q309 252 312 265 Z M317 259 Q325 245 326 239 Q334 249 338 261 Z M342 251 Q350 237 351 231 Q359 241 363 253 Z M367 241 Q376 227 377 220 Q385 232 389 245 Z M393 234 Q402 220 403 213 Q411 225 414 238 Z M419 239 Q429 225 430 218 Q438 230 441 244 Z M445 250 Q455 236 456 229 Q465 241 467 255 Z M472 250 Q482 237 483 230 Q491 242 492 254 Z M498 233 Q508 221 509 214 Q517 224 518 238 Z M520 212 Q531 200 532 192 Q540 202 541 216 Z"/>',
+                '    <path class="dragon-redesign-scale-ridges" d="m295 260 10 5m12-6 10 5m13-10 10 5m15-13 10 5m13-9 9 6m12-1 7 8m12 2 5 9m14 4 2 10m16-3-2 10m17-5-5 9m17-14-5 10"/>',
+                '    <g class="dragon-redesign-wing dragon-redesign-wing-near">',
+                '      <path class="dragon-redesign-wing-membrane" d="M432 246 Q399 217 398 178 L350 86 Q383 95 405 125 L397 54 Q431 80 441 130 L463 35 Q486 76 472 130 L526 77 Q523 121 488 163 Q482 207 450 249 Z"/>',
+                '      <path class="dragon-redesign-wing-rib dragon-redesign-wing-rib-a" d="M432 246 Q414 198 350 86"/>',
+                '      <path class="dragon-redesign-wing-rib dragon-redesign-wing-rib-b" d="M429 232 Q420 174 397 54"/>',
+                '      <path class="dragon-redesign-wing-rib dragon-redesign-wing-rib-c" d="M435 236 Q448 173 463 35"/>',
+                '      <path class="dragon-redesign-wing-rib dragon-redesign-wing-rib-d" d="M440 239 Q475 185 526 77"/>',
+                '      <path class="dragon-redesign-wing-edge" d="M350 86 Q383 95 405 125 M397 54 Q431 80 441 130 M463 35 Q486 76 472 130 M526 77 Q523 121 488 163"/>',
+                '      <path class="dragon-redesign-wing-knuckles" d="M405 125 Q423 137 441 130 Q458 141 472 130 M398 178 Q426 194 454 180 Q473 184 488 163"/>',
                 '    </g>',
                 '  </g>',
-                '  <g class="dragon-hind-leg-far dragon-limb">',
-                '    <path class="dragon-limb-shadow dragon-thigh-shadow" d="M158 139q-17 3-27 18l-12 21q-4 9 4 14l11 2q12-5 19-18l17-17q11-9 6-17-6-7-18-3z"/>',
-                '    <path class="dragon-thigh" d="M157 142q-14 4-21 18l-10 19q-3 6 3 9l7 2q9-6 14-16l17-17q7-7 2-12-4-5-12-3z"/>',
-                '    <path class="dragon-hip-plate" d="m157 143 9-2 7 5-7 8-11-2z"/>',
-                '    <path class="dragon-muscle-highlight" d="M148 150q-9 6-13 17m18-15q-7 10-10 18"/>',
-                '    <path class="dragon-shin-shadow" d="m128 180-12 15q-4 5 0 10l8 5 12-5 12-17"/>',
-                '    <path class="dragon-shin" d="m128 180-10 14q-3 4 1 7l6 4 10-5 11-16"/>',
-                '    <circle class="dragon-joint dragon-knee" cx="128" cy="181" r="6"/>',
-                '    <path class="dragon-ankle-guard" d="m119 194 10 5m-13-1 9 5"/>',
-                '    <path class="dragon-foot" d="m124 196q-8 5-13 11l-5 8q8 3 17-2l10-8 5-7-5-6z"/>',
-                '    <path class="dragon-foot-plate" d="m117 198 9 4-6 8-9 3 4-8z"/>',
-                '    <g class="dragon-toes dragon-toes-far">',
-                '      <path class="dragon-toe" d="m116 208q-8 1-13 7l-3 5q7 2 14-2l7-5"/>',
-                '      <path class="dragon-toe" d="m123 210q-5 5-6 11l1 4q6-2 9-8l3-6"/>',
-                '      <path class="dragon-toe" d="m130 207q-2 6 1 11l3 3q4-5 2-11l-1-5"/>',
-                '      <path class="dragon-digit-crease" d="m109 215 5-1m6 1 5-1m7-2 4-1"/>',
-                '      <circle class="dragon-digit-joint" cx="115" cy="213" r="1.5"/><circle class="dragon-digit-joint" cx="126" cy="214" r="1.5"/><circle class="dragon-digit-joint" cx="136" cy="210" r="1.5"/>',
-                '      <path class="dragon-claw" d="m101 220q-5 5-2 7 7-1 12-6m5-1q-2 6 2 7 6-3 7-8m7-2q1 5 6 6 4-4 1-9"/>',
+                '  <g class="dragon-redesign-neck">',
+                '    <path class="dragon-redesign-neck-fill" d="M518 226 Q545 205 549 178 Q550 151 576 139 Q592 133 610 140 L611 166 Q585 158 575 174 Q564 193 552 222 Q539 238 518 239 Z"/>',
+                '    <path class="dragon-redesign-neck-scales" d="M518 226 Q545 205 549 178 Q550 151 576 139 Q592 133 610 140 L611 166 Q585 158 575 174 Q564 193 552 222 Q539 238 518 239 Z"/>',
+                '    <path class="dragon-redesign-neck-plates" d="m534 222 15 4m-3-20 15 5m-10-23 16 6m-7-24 17 6m-4-24 17 6m8-19 14 8m-31 73 13 7"/>',
+                '    <path class="dragon-redesign-neck-spikes" d="m532 219-13-16 21 8m-8-22-15-17 24 8m-3-22-9-20 25 12m1-22-2-22 21 18m4-17 8-19 12 23"/>',
+                '  </g>',
+                '  <g class="dragon-redesign-head">',
+                '    <path class="dragon-redesign-mane" d="M588 145 Q563 125 550 105 Q552 132 577 155 M600 141 Q584 119 582 99 Q602 115 610 137 M615 143 Q617 119 632 101 Q637 124 627 145"/>',
+                '    <path class="dragon-redesign-horn" d="M589 140 Q571 111 548 101 Q566 101 582 109 Q566 83 572 65 Q593 83 604 125 Z"/>',
+                '    <path class="dragon-redesign-horn" d="M611 136 Q617 108 643 89 Q637 111 637 124 Q656 108 677 108 Q662 128 638 145 Z"/>',
+                '    <path class="dragon-redesign-skull" d="M585 143 Q598 126 624 130 L653 136 Q668 140 679 153 L710 164 Q718 169 708 177 L679 183 Q664 196 642 188 L624 180 L607 188 L590 176 L580 167 Z"/>',
+                '    <path class="dragon-redesign-brow" d="m618 145 18-8 17 8-17 3z"/>',
+                '    <path class="dragon-redesign-eye" d="M620 151 Q634 140 647 150 Q639 160 624 157 Z"/>',
+                '    <circle class="dragon-redesign-pupil" cx="636" cy="151" r="3.2"/>',
+                '    <path class="dragon-redesign-nostril" d="m686 165 7 2m-13 4 6 2"/>',
+                '    <path class="dragon-redesign-whisker" d="M630 178 Q607 188 587 207 Q612 197 628 190 M650 181 Q643 204 653 218 Q660 201 660 187 M603 164 Q579 159 561 171 M680 175 Q704 186 717 203 Q697 197 681 186"/>',
+                '    <g class="dragon-redesign-jaw">',
+                '      <path d="M611 177 Q642 184 678 177 L704 174 Q691 191 665 198 L637 195 L615 187 Z"/>',
+                '      <path class="dragon-redesign-teeth" d="m650 184 5 10 5-9m10-3 4 9 5-11"/>',
                 '    </g>',
-                '    <path class="dragon-joint-highlight" d="m124 179 5-3m-13 29 5-2"/>',
+                '    <path class="dragon-redesign-mouth" d="M615 177 Q655 184 700 175"/>',
                 '  </g>',
-                '  <g class="dragon-flight-body">',
-                '    <path class="dragon-back-spines" d="m110 114 9-21 13 16 12-22 13 21 15-20 13 20 14-15 10 17"/>',
-                '    <path class="dragon-torso" d="M78 139c5-35 33-60 72-63 34-3 64 12 81 37l30 6 16 17-21 15-26-6-27 22-44-3-31 12-26-13-28 1-16-12z"/>',
-                '    <path class="dragon-torso-scales" d="M78 139c5-35 33-60 72-63 34-3 64 12 81 37l30 6 16 17-21 15-26-6-27 22-44-3-31 12-26-13-28 1-16-12z"/>',
-                '    <path class="dragon-belly" d="M126 147q35 14 69 2l34 9-28 27-45-3-32 11-20-9z"/>',
-                '    <path class="dragon-scale-ridges" d="m112 111 9 6m7-15 8 7m9-13 8 8m9-9 8 9m10-6 8 10m8-5 8 10m9-3 8 10m-91 13 9 6m11-4 9 6m13-7 9 6m12-7 9 6m-61 18 10 4m15-4 10 4m15-4 10 4"/>',
-                '    <path class="dragon-neck" d="M216 119q10-36 41-48l28 5 25 20-20 13-15-2-15 34-24 17-26-13z"/>',
-                '    <path class="dragon-neck-plates" d="m244 94 12 6m-6-16 12 7m4-4 10 8m-25 16 13 7m-22 4 13 7m-23 5 13 6"/>',
-                '    <g class="dragon-head">',
-                '    <path class="dragon-skull" d="M263 82q21-20 47-10l16 10 25 8 5 10-27 9-14-2-12 14-19-6-14-13-15 1-9-10z"/>',
-                '    <path class="dragon-brow" d="m302 83 17-3 12 9-20-2z"/>',
-                '    <path class="dragon-horn" d="m292 78-5-23 16 15m10-4 13-19 1 27"/>',
-                '    <path class="dragon-jaw" d="m302 105 19 5 32-5-10 15-27 7-19-10z"/>',
-                '    <path class="dragon-teeth" d="m320 108 4 9 4-10m9 0 3 7 4-9"/>',
-                '    <ellipse class="dragon-eye-socket" cx="314" cy="88" rx="10" ry="7"/>',
-                '    <ellipse class="dragon-eye" cx="317" cy="88" rx="5" ry="4"/>',
-                '    <circle class="dragon-pupil" cx="319" cy="88" r="1.8"/>',
-                '    <path class="dragon-nostril" d="m340 94 5-1m-11 4 4-1"/>',
-                '    <path class="dragon-mouth" d="m305 104 44 1"/>',
-                '    </g>',
+                '  <g class="dragon-redesign-limb dragon-redesign-leg-near dragon-redesign-hind-leg">',
+                '    <path class="dragon-redesign-leg-bone" d="M291 260 Q278 278 291 299"/>',
+                '    <circle class="dragon-redesign-joint" cx="291" cy="299" r="6"/>',
+                '    <path class="dragon-redesign-leg-shin" d="M291 299 Q300 314 287 336"/>',
+                '    <path class="dragon-redesign-claws" d="M287 336 Q272 341 264 333l-6 7 15-1 4 6 5-3 7 3 5-7"/>',
                 '  </g>',
-                '  <g class="dragon-wing-near">',
-                '    <path class="dragon-wing-membrane dragon-wing-membrane-near" d="M163 126Q154 96 137 63L114 23Q139 43 161 62L183 7Q187 43 188 70L222 25Q216 67 210 93L244 64Q229 105 196 143L159 154Z"/>',
-                '    <path class="dragon-wing-bone dragon-wing-bone-near" d="M163 132 137 63 114 23M137 63 161 62 183 7M161 62 188 70 222 25M188 70 210 93 244 64M188 70 194 137"/>',
-                '    <path class="dragon-wing-knuckle" d="m114 23-7-14m7 14 16-4m53-26-1-13m40 31 8-11m14 50 13-5"/>',
+                '  <g class="dragon-redesign-limb dragon-redesign-leg-near dragon-redesign-fore-leg">',
+                '    <path class="dragon-redesign-leg-bone" d="M460 247 Q476 267 477 290"/>',
+                '    <circle class="dragon-redesign-joint" cx="477" cy="290" r="6"/>',
+                '    <path class="dragon-redesign-leg-shin" d="M477 290 Q469 311 479 333"/>',
+                '    <path class="dragon-redesign-claws" d="M479 333 Q464 338 455 330l-6 7 15-1 4 6 5-3 7 3 5-7"/>',
                 '  </g>',
-                '  <g class="dragon-front-arm-far dragon-limb">',
-                '    <path class="dragon-limb-shadow dragon-arm-silhouette" d="M207 124q-12 1-17 11l-8 11-18 4q-8 2-9 10l-2 12 6 9 11-2 7-10 17-4q10-4 16-14l12-17z"/>',
-                '    <path class="dragon-arm-upper" d="M205 127q-9 2-13 10l-8 12q-3 5 2 8l7 2q8-6 12-14l11-10z"/>',
-                '    <path class="dragon-shoulder-plate" d="m203 125 10 1 6 8-8 8-10-4-4-7z"/>',
-                '    <path class="dragon-arm-muscle" d="M197 132q-7 5-9 13l7-1 8-10z"/>',
-                '    <path class="dragon-muscle-highlight" d="m198 132-7 11m12-5-6 9"/>',
-                '    <path class="dragon-arm-fore" d="m185 151-17 5q-6 2-7 8l-2 8q-1 5 4 7l6-2 7-9 14-5q7-3 10-10l-5-6z"/>',
-                '    <circle class="dragon-joint dragon-elbow" cx="184" cy="151" r="5"/>',
-                '    <path class="dragon-joint-highlight" d="m181 149 4-2m-18 22 4-2"/>',
-                '    <path class="dragon-wrist" d="m164 169-8 2-3 7 6 6 10-3 4-7z"/>',
-                '    <path class="dragon-palm" d="m163 173q-7 0-9 5l2 7 8 4 8-5-1-8z"/>',
-                '    <g class="dragon-fingers dragon-fingers-far">',
-                '      <path class="dragon-finger" d="m160 183q-7 3-10 9-1 3 2 4l7-3 5-6"/>',
-                '      <path class="dragon-finger" d="m165 185q-5 5-5 11 1 3 4 2l5-8 1-5"/>',
-                '      <path class="dragon-finger" d="m170 184q-2 6 1 10 2 2 4-1l2-8-2-4"/>',
-                '      <path class="dragon-finger-thumb" d="m157 178q-7-3-11 0-2 2 1 5l9 3"/>',
-                '      <path class="dragon-digit-crease" d="m153 190 4-2m7-1 4-1m4-2 3-1m-18-6 4 1"/>',
-                '      <circle class="dragon-digit-joint" cx="157" cy="188" r="1.6"/><circle class="dragon-digit-joint" cx="166" cy="188" r="1.6"/><circle class="dragon-digit-joint" cx="173" cy="184" r="1.6"/>',
-                '      <path class="dragon-claw" d="m150 194q-4 6-1 8 5-2 9-8m4 2q-2 6 1 7 5-3 7-9m5-3q1 5 4 5 4-4 2-9m-27-6q-7 1-10 4 3 4 10 4"/>',
-                '    </g>',
-                '  </g>',
-                '  <g class="dragon-hind-leg-near dragon-limb">',
-                '    <path class="dragon-limb-shadow dragon-thigh-shadow" d="M177 147q13-9 25-1 9 6 7 17l-8 16q-3 7-12 9l-13-5-9-12q-4-10 3-18z"/>',
-                '    <path class="dragon-thigh" d="M177 150q12-7 21 0 7 5 4 13l-7 15q-3 6-10 7l-11-6-6-10q-2-10 4-15z"/>',
-                '    <path class="dragon-hip-plate" d="m176 150 9-5 9 3-1 9-10 5-8-5z"/>',
-                '    <path class="dragon-muscle-highlight" d="M177 155q9-8 17-2m-18 8q7-6 14-4m-7 15 9-7"/>',
-                '    <circle class="dragon-joint dragon-knee" cx="194" cy="180" r="7"/>',
-                '    <path class="dragon-shin-shadow" d="m194 183q12 1 18 11l9 12q4 6-1 12l-7 7-12-6-7-13-14-11"/>',
-                '    <path class="dragon-shin" d="m194 183q9 2 14 10l9 13q3 4-1 9l-5 5-9-6-7-12-13-10"/>',
-                '    <path class="dragon-joint-highlight" d="m191 180 6-3m10 19 5 3"/>',
-                '    <path class="dragon-ankle-guard" d="m207 207 9 3m-8 2 8 4"/>',
-                '    <path class="dragon-foot" d="m210 215q9-7 19-5l15 4q6 2 7 8-9 5-20 3l-17-2-9-4z"/>',
-                '    <path class="dragon-foot-plate" d="m216 214 11 1 5 8-12-1z"/>',
-                '    <g class="dragon-toes dragon-toes-near">',
-                '      <path class="dragon-toe" d="m222 215q-2 4 2 8l10 2q4-2 0-6l-7-5"/>',
-                '      <path class="dragon-toe" d="m230 214q-1 5 4 8l10 1q4-3-1-6l-8-4"/>',
-                '      <path class="dragon-toe" d="m238 212q1 5 7 7l8-1q3-4-3-6l-8-3"/>',
-                '      <path class="dragon-digit-crease" d="m229 220 5 1m8 0 5 1m3-6 5 1"/>',
-                '      <circle class="dragon-digit-joint" cx="231" cy="219" r="1.6"/><circle class="dragon-digit-joint" cx="242" cy="218" r="1.6"/><circle class="dragon-digit-joint" cx="250" cy="215" r="1.6"/>',
-                '      <path class="dragon-claw" d="m233 222q2 6 7 5 3-4 0-8m5 0q4 5 8 2 1-5-4-8m8-1q5 4 8 0-1-5-7-6"/>',
-                '    </g>',
-                '  </g>',
-                '  <g class="dragon-front-arm-near dragon-limb">',
-                '    <path class="dragon-limb-shadow dragon-arm-silhouette" d="M225 121q-12 2-16 12l-8 10-12 3q-8 3-9 11l-2 12 7 8 11-2 6-9 12-4q11-4 17-14l11-16z"/>',
-                '    <path class="dragon-arm-upper" d="M223 125q-8 2-12 10l-7 10q-3 5 1 8l8 2q7-5 11-13l10-9z"/>',
-                '    <path class="dragon-shoulder-plate" d="m222 122 10 2 5 8-8 8-10-4-3-7z"/>',
-                '    <path class="dragon-arm-muscle" d="M215 131q-6 4-8 12l7-1 7-9z"/>',
-                '    <path class="dragon-muscle-highlight" d="m215 132-6 10m11-4-6 9"/>',
-                '    <circle class="dragon-joint dragon-elbow" cx="207" cy="146" r="6"/>',
-                '    <path class="dragon-arm-fore" d="m205 146q-7 0-12 7l-7 11q-3 5 2 8l7-1 7-9 12-6q7-4 8-11l-7-5z"/>',
-                '    <path class="dragon-joint-highlight" d="m204 143 5-1m-18 19 5-2"/>',
-                '    <path class="dragon-wrist" d="m192 162-8 4-2 8 7 5 9-4 3-7z"/>',
-                '    <path class="dragon-palm" d="m190 166q-7 1-8 7l4 7 9 1 6-7-3-7z"/>',
-                '    <g class="dragon-fingers dragon-fingers-near">',
-                '      <path class="dragon-finger" d="m187 178q-6 4-7 10 1 3 4 2l6-7 2-5"/>',
-                '      <path class="dragon-finger" d="m192 180q-4 6-2 11 2 2 4 0l4-9-1-4"/>',
-                '      <path class="dragon-finger" d="m197 177q-1 6 3 9 3 1 4-3l-1-7-3-3"/>',
-                '      <path class="dragon-finger-thumb" d="m186 170q-7-2-10 2-1 3 3 5l8 1"/>',
-                '      <path class="dragon-digit-crease" d="m182 185 4-2m8-1 4-1m5-2 3-2m-19-6 4 1"/>',
-                '      <circle class="dragon-digit-joint" cx="185" cy="184" r="1.6"/><circle class="dragon-digit-joint" cx="195" cy="184" r="1.6"/><circle class="dragon-digit-joint" cx="202" cy="178" r="1.6"/>',
-                '      <path class="dragon-claw" d="m180 188q-3 6 1 8 5-3 8-8m3 2q-1 6 3 7 4-4 5-9m5-1q2 4 5 3 3-5 0-9m-26-8q-7 2-9 5 3 4 9 3"/>',
-                '    </g>',
-                '  </g>',
-                '  <path class="dragon-flight-flame" d="M349 101q16-8 4 2 16-1 3 5 12 7-4 5"/>',
                 '</svg>'
             ].join('');
             chart.appendChild(dragonWrap);
             dragon = dragonWrap;
             dragon.style.setProperty('--dragon-size', animationSettings.dragonSizePx + 'px');
 
-            function setDragonPosition(position) {
+            function setDragonPosition(position, bank, depth) {
                 dragonPosition = position;
-                dragon.style.transform = 'translate3d(' + position.x + 'px, ' + position.y + 'px, 0) translate(-50%, -50%)';
+                var flightBank = bank || 0;
+                dragon.style.setProperty('--flight-bank', flightBank.toFixed(2) + 'deg');
+                dragon.style.setProperty('--head-bank', (flightBank * 0.72).toFixed(2) + 'deg');
+                dragon.style.setProperty('--neck-bank', (flightBank * 0.48).toFixed(2) + 'deg');
+                dragon.style.setProperty('--tail-bank', (flightBank * -0.56).toFixed(2) + 'deg');
+                dragon.style.transform = 'translate3d(' + position.x + 'px, ' + position.y +
+                    'px, 0) translate(-50%, -50%) rotate(' + flightBank + 'deg) scale(' + (depth || 1) + ')';
             }
 
             function targetPosition(index) {
@@ -1123,7 +1183,7 @@
                 skillItems[index].item.scrollIntoView({
                     block: 'nearest',
                     inline: 'nearest',
-                    behavior: reduceMotion.matches ? 'auto' : 'smooth'
+                    behavior: 'auto'
                 });
                 itemRect = skillItems[index].item.getBoundingClientRect();
                 chartRect = chart.getBoundingClientRect();
@@ -1131,17 +1191,101 @@
                 var targetRight = itemRect.right - chartRect.left;
                 var targetCenterY = itemRect.top + itemRect.height / 2 - chartRect.top;
                 var targetCenterX = targetLeft + itemRect.width / 2;
-                var isNarrowLayout = window.matchMedia('(max-width: 600px)').matches;
                 var facingLeft = dragonPosition.x > targetCenterX;
-                var x = isNarrowLayout ?
-                    targetCenterX + (facingLeft ? dragonWidth * 0.49 : -dragonWidth * 0.49) :
-                    (facingLeft ? targetRight + dragonWidth * 0.49 : targetLeft - dragonWidth * 0.49);
+                var x = facingLeft ?
+                    targetRight + dragonWidth * 0.49 :
+                    targetLeft - dragonWidth * 0.49;
                 x = Math.max(dragonWidth * 0.5, Math.min(chart.clientWidth - dragonWidth * 0.5, x));
                 return {
                     x: x,
-                    y: targetCenterY + dragonHeight * 0.04,
+                    y: targetCenterY + dragonHeight * 0.08,
                     facingLeft: facingLeft
                 };
+            }
+
+            function targetIntensity(index) {
+                var intensity = Number(skillItems[index].item.dataset.intensity);
+                return Number.isFinite(intensity) ? intensity : 0;
+            }
+
+            function selectNextTarget() {
+                var highestIntensity = -1;
+                var nextIndex = -1;
+                var nearestDistance = Infinity;
+                var chartRect = chart.getBoundingClientRect();
+
+                skillItems.forEach(function (entry, index) {
+                    var item = entry.item;
+                    if (item.classList.contains('is-eaten') || item.classList.contains('is-being-eaten')) {
+                        return;
+                    }
+
+                    var intensity = targetIntensity(index);
+                    if (intensity > highestIntensity) {
+                        highestIntensity = intensity;
+                        nextIndex = -1;
+                        nearestDistance = Infinity;
+                    }
+                    if (intensity !== highestIntensity) {
+                        return;
+                    }
+
+                    var rect = item.getBoundingClientRect();
+                    var centerX = rect.left - chartRect.left + rect.width / 2;
+                    var centerY = rect.top - chartRect.top + rect.height / 2;
+                    var distanceX = centerX - dragonPosition.x;
+                    var distanceY = centerY - dragonPosition.y;
+                    var distance = distanceX * distanceX + distanceY * distanceY;
+                    if (distance < nearestDistance) {
+                        nearestDistance = distance;
+                        nextIndex = index;
+                    }
+                });
+
+                return nextIndex;
+            }
+
+            function prepareFlight(index, resetElapsed) {
+                routeFrom = dragonPosition;
+                routeTo = targetPosition(index);
+                var distanceX = routeTo.x - routeFrom.x;
+                var distanceY = routeTo.y - routeFrom.y;
+                var distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+                var arc = Math.min(chart.clientHeight * 0.42, Math.max(18, distance * 0.2));
+                var arcDirection = index % 2 === 0 ? -1 : 1;
+                var controlMinY = dragon.offsetHeight * 0.36;
+                var controlMaxY = Math.max(controlMinY, chart.clientHeight - dragon.offsetHeight * 0.36);
+                routeControlStart = {
+                    x: routeFrom.x + distanceX * 0.28,
+                    y: Math.max(controlMinY, Math.min(controlMaxY, routeFrom.y + distanceY * 0.28 + arcDirection * arc))
+                };
+                routeControlEnd = {
+                    x: routeFrom.x + distanceX * 0.72,
+                    y: Math.max(controlMinY, Math.min(controlMaxY, routeFrom.y + distanceY * 0.72 + arcDirection * arc * 0.62))
+                };
+                currentTravelDuration = animationSettings.travelDurationMs +
+                    Math.min(600, Math.max(0, distance - dragon.offsetWidth) * 1.3);
+
+                var wasFacingLeft = dragon.classList.contains('is-facing-left');
+                dragon.classList.toggle('is-facing-left', routeTo.facingLeft);
+                setDragonDirection(routeTo.facingLeft);
+                setFlightBank(routeFrom, routeTo);
+                dragon.classList.remove('is-approaching', 'is-gliding', 'is-climbing', 'is-descending');
+                dragon.classList.toggle('is-climbing', routeTo.y < routeFrom.y - 8);
+                dragon.classList.toggle('is-descending', routeTo.y > routeFrom.y + 8);
+                dragon.classList.add('is-traveling');
+                dragon.classList.toggle('is-turning', wasFacingLeft !== routeTo.facingLeft);
+
+                if (resetElapsed !== false) {
+                    phaseElapsed = 0;
+                    lastFrameTime = 0;
+                }
+            }
+
+            function describeApproach(index) {
+                var intensity = targetIntensity(index);
+                return 'Dragon approaching ' + skillItems[index].item.dataset.skill +
+                    ' · ' + (activityLabels[intensity] || 'Unrated') + ' contribution activity';
             }
 
             function setDragonDirection(facingLeft) {
@@ -1152,8 +1296,11 @@
                 var horizontalDistance = Math.max(Math.abs(to.x - from.x), dragon.offsetWidth * 0.35);
                 var verticalAngle = Math.atan2(to.y - from.y, horizontalDistance) * 180 / Math.PI;
                 var facingMultiplier = to.facingLeft ? -1 : 1;
-                var bank = Math.max(-8, Math.min(8, verticalAngle * 0.45 * facingMultiplier));
+                var bank = Math.max(-16, Math.min(16, verticalAngle * 0.72 * facingMultiplier));
                 dragon.style.setProperty('--flight-bank', bank.toFixed(2) + 'deg');
+                dragon.style.setProperty('--head-bank', (bank * 0.62).toFixed(2) + 'deg');
+                dragon.style.setProperty('--neck-bank', (bank * 0.42).toFixed(2) + 'deg');
+                dragon.style.setProperty('--tail-bank', (bank * -0.48).toFixed(2) + 'deg');
             }
 
             function createFlameBurst(index) {
@@ -1173,8 +1320,8 @@
                 var box = skillItems[index].item;
                 var boxRect = box.getBoundingClientRect();
                 var dragonRect = dragon.getBoundingClientRect();
-                var mouthX = dragonRect.left + dragonRect.width * (dragon.classList.contains('is-facing-left') ? 0.02 : 0.98);
-                var mouthY = dragonRect.top + dragonRect.height * 0.47;
+                var mouthX = dragonRect.left + dragonRect.width * (dragon.classList.contains('is-facing-left') ? 0.03 : 0.97);
+                var mouthY = dragonRect.top + dragonRect.height * 0.42;
                 box.style.setProperty('--bite-x', (mouthX - boxRect.left - boxRect.width / 2) + 'px');
                 box.style.setProperty('--bite-y', (mouthY - boxRect.top - boxRect.height / 2) + 'px');
                 box.style.setProperty('--bite-duration', animationSettings.eatDurationMs + 'ms');
@@ -1192,9 +1339,22 @@
                         entry.burst = null;
                     }
                 });
-                dragon.classList.remove('is-eating', 'is-facing-left', 'is-traveling', 'is-turning', 'is-approaching');
+                dragon.classList.remove(
+                    'is-eating',
+                    'is-facing-left',
+                    'is-traveling',
+                    'is-turning',
+                    'is-approaching',
+                    'is-gliding',
+                    'is-climbing',
+                    'is-descending'
+                );
+                dragon.classList.add('is-stopped');
                 dragon.style.removeProperty('--flight-bank');
-                chart.classList.remove('is-paused');
+                dragon.style.removeProperty('--head-bank');
+                dragon.style.removeProperty('--neck-bank');
+                dragon.style.removeProperty('--tail-bank');
+                chart.classList.remove('is-animating', 'is-paused');
             }
 
             function animateDragon(timestamp) {
@@ -1207,22 +1367,49 @@
 
                 if (routePhase === 'travel') {
                     phaseElapsed += delta;
-                    var progress = Math.min(phaseElapsed / animationSettings.travelDurationMs, 1);
+                    var progress = Math.min(phaseElapsed / currentTravelDuration, 1);
                     var eased = progress * progress * (3 - 2 * progress);
-                    setDragonPosition({
-                        x: routeFrom.x + (routeTo.x - routeFrom.x) * eased,
-                        y: routeFrom.y + (routeTo.y - routeFrom.y) * eased
-                    });
+                    var inverseProgress = 1 - eased;
+                    var inverseSquared = inverseProgress * inverseProgress;
+                    var easedSquared = eased * eased;
+                    var position = {
+                        x: inverseSquared * inverseProgress * routeFrom.x +
+                            3 * inverseSquared * eased * routeControlStart.x +
+                            3 * inverseProgress * easedSquared * routeControlEnd.x +
+                            easedSquared * eased * routeTo.x,
+                        y: inverseSquared * inverseProgress * routeFrom.y +
+                            3 * inverseSquared * eased * routeControlStart.y +
+                            3 * inverseProgress * easedSquared * routeControlEnd.y +
+                            easedSquared * eased * routeTo.y
+                    };
+                    var tangentX = 3 * inverseSquared * (routeControlStart.x - routeFrom.x) +
+                        6 * inverseProgress * eased * (routeControlEnd.x - routeControlStart.x) +
+                        3 * easedSquared * (routeTo.x - routeControlEnd.x);
+                    var tangentY = 3 * inverseSquared * (routeControlStart.y - routeFrom.y) +
+                        6 * inverseProgress * eased * (routeControlEnd.y - routeControlStart.y) +
+                        3 * easedSquared * (routeTo.y - routeControlEnd.y);
+                    var bank = Math.atan2(tangentY, Math.max(Math.abs(tangentX), 1)) *
+                        180 / Math.PI * (routeTo.facingLeft ? -1 : 1) * Math.sin(Math.PI * progress);
+                    var depth = 1 + Math.sin(Math.PI * progress) * 0.025;
+                    setDragonPosition(position, bank, depth);
                     if (progress === 1) {
-                        routePhase = 'eat';
+                        routePhase = 'approach';
                         phaseElapsed = 0;
                         dragon.classList.remove('is-traveling', 'is-turning');
                         dragon.classList.add('is-approaching');
+                        setDragonPosition(routeTo, 0, 1);
+                        status.textContent = 'Dragon hovering beside ' + skillItems[routeIndex].item.dataset.skill;
+                    }
+                } else if (routePhase === 'approach') {
+                    phaseElapsed += delta;
+                    if (phaseElapsed >= 180) {
+                        routePhase = 'eat';
+                        phaseElapsed = 0;
                         setBiteTarget(routeIndex);
                         skillItems[routeIndex].item.classList.add('is-being-eaten');
                         dragon.classList.add('is-eating');
                         createFlameBurst(routeIndex);
-                        status.textContent = 'Dragon is eating ' + academicSkills[routeIndex];
+                        status.textContent = 'Dragon is eating ' + skillItems[routeIndex].item.dataset.skill;
                     }
                 } else if (routePhase === 'eat') {
                     phaseElapsed += delta;
@@ -1234,33 +1421,31 @@
                             skillItems[routeIndex].burst = null;
                         }
                         dragon.classList.remove('is-eating');
-                        dragon.classList.add('is-approaching');
+                        dragon.classList.remove('is-approaching');
+                        dragon.classList.add('is-gliding');
                         routePhase = 'pause';
                         phaseElapsed = 0;
                     }
                 } else if (routePhase === 'pause') {
                     phaseElapsed += delta;
                     if (phaseElapsed >= animationSettings.pauseDurationMs) {
-                        routeIndex += 1;
-                        if (routeIndex >= skillItems.length) {
+                        var previousIntensity = targetIntensity(routeIndex);
+                        routeIndex = selectNextTarget();
+                        if (routeIndex < 0) {
                             dragonFrame = 0;
                             chart.classList.remove('is-animating', 'is-paused');
+                            dragon.classList.add('is-stopped');
                             pauseButton.disabled = true;
-                            status.textContent = 'Feast complete — the dragon ate every skill box.';
+                            status.textContent = 'Graph complete — the dragon ate every CSE skill cell.';
                             return;
                         }
                         routePhase = 'travel';
-                        phaseElapsed = 0;
-                        routeFrom = dragonPosition;
-                        routeTo = targetPosition(routeIndex);
-                        var wasFacingLeft = dragon.classList.contains('is-facing-left');
-                        dragon.classList.toggle('is-facing-left', routeTo.facingLeft);
-                        setDragonDirection(routeTo.facingLeft);
-                        setFlightBank(routeFrom, routeTo);
-                        dragon.classList.remove('is-approaching');
-                        dragon.classList.add('is-traveling');
-                        dragon.classList.toggle('is-turning', wasFacingLeft !== routeTo.facingLeft);
-                        status.textContent = 'Dragon approaching ' + academicSkills[routeIndex];
+                        prepareFlight(routeIndex);
+                        var nextIntensity = targetIntensity(routeIndex);
+                        status.textContent = nextIntensity < previousIntensity ?
+                            'Intensity ' + (activityLabels[previousIntensity] || 'Unrated') +
+                                ' complete. Moving to ' + (activityLabels[nextIntensity] || 'unrated') + ' cells.' :
+                            describeApproach(routeIndex);
                     }
                 }
                 dragonFrame = window.requestAnimationFrame(animateDragon);
@@ -1273,19 +1458,28 @@
                     entry.item.style.removeProperty('--bite-x');
                     entry.item.style.removeProperty('--bite-y');
                 });
-                if (reduceMotion.matches || !skillItems.length) {
+                if (reduceMotion.matches) {
                     chart.classList.remove('is-animating');
                     chart.classList.add('is-static');
                     dragon.hidden = true;
                     return;
                 }
+                if (!skillItems.length) {
+                    chart.classList.remove('is-animating');
+                    chart.classList.add('is-static');
+                    dragon.hidden = true;
+                    pauseButton.disabled = true;
+                    replayButton.disabled = true;
+                    status.textContent = 'Add at least one skill to the editable list to start the animation.';
+                    return;
+                }
+                dragon.classList.remove('is-stopped');
                 dragon.hidden = false;
                 chart.classList.remove('is-static');
                 animationPaused = false;
                 pauseButton.disabled = false;
                 pauseButton.textContent = 'Pause dragon';
                 pauseButton.setAttribute('aria-pressed', 'false');
-                routeIndex = 0;
                 routePhase = 'travel';
                 phaseElapsed = 0;
                 lastFrameTime = 0;
@@ -1295,16 +1489,19 @@
                 }
                 chart.classList.add('is-animating');
                 routeFrom = {
-                    x: chart.clientWidth / 2,
+                    x: Math.min(chart.clientWidth - dragon.offsetWidth / 2, dragon.offsetWidth),
                     y: Math.max(24, dragon.offsetHeight * 0.43)
                 };
                 setDragonPosition(routeFrom);
-                routeTo = targetPosition(routeIndex);
-                dragon.classList.toggle('is-facing-left', routeTo.facingLeft);
-                setDragonDirection(routeTo.facingLeft);
-                setFlightBank(routeFrom, routeTo);
-                dragon.classList.add('is-traveling');
-                status.textContent = 'Dragon approaching ' + academicSkills[routeIndex];
+                routeIndex = selectNextTarget();
+                if (routeIndex < 0) {
+                    dragon.hidden = true;
+                    pauseButton.disabled = true;
+                    status.textContent = 'No contribution cells are available to eat.';
+                    return;
+                }
+                prepareFlight(routeIndex);
+                status.textContent = describeApproach(routeIndex);
                 dragonFrame = window.requestAnimationFrame(animateDragon);
             }
 
@@ -1312,13 +1509,7 @@
                 if (!dialog.open || routePhase !== 'travel' || animationPaused || reduceMotion.matches || !dragonFrame) {
                     return;
                 }
-                routeFrom = dragonPosition;
-                routeTo = targetPosition(routeIndex);
-                setFlightBank(routeFrom, routeTo);
-                dragon.classList.toggle('is-facing-left', routeTo.facingLeft);
-                setDragonDirection(routeTo.facingLeft);
-                phaseElapsed = 0;
-                lastFrameTime = 0;
+                prepareFlight(routeIndex);
             }
 
             function updateMotionPreference() {
