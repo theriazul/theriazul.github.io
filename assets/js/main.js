@@ -1628,6 +1628,7 @@
             }
 
             var counters = section.querySelectorAll('.about-me-number');
+            var stats = section.querySelector('.about-me-stats');
             var hasAnimated = false;
 
             function animateCounter(counter) {
@@ -1635,9 +1636,14 @@
                 var target = parseInt(targetText, 10);
                 var suffixMatch = targetText.match(/[^\d.-]+$/);
                 var suffix = suffixMatch ? suffixMatch[0] : '';
+                var minimumDigits = parseInt(counter.getAttribute('data-min-digits'), 10) || 1;
                 var start = 0;
                 var duration = 1800;
                 var startTime = null;
+
+                function formatValue(value) {
+                    return String(value).padStart(minimumDigits, '0') + suffix;
+                }
 
                 function update(timestamp) {
                     if (!startTime) {
@@ -1645,11 +1651,11 @@
                     }
                     var progress = Math.min((timestamp - startTime) / duration, 1);
                     var value = Math.floor(progress * target);
-                    counter.textContent = value + suffix;
+                    counter.textContent = formatValue(value);
                     if (progress < 1) {
                         requestAnimationFrame(update);
                     } else {
-                        counter.textContent = target + suffix;
+                        counter.textContent = formatValue(target);
                     }
                 }
 
@@ -1658,7 +1664,8 @@
 
             function runAnimation() {
                 counters.forEach(function (counter) {
-                    counter.textContent = '0';
+                    var minimumDigits = parseInt(counter.getAttribute('data-min-digits'), 10) || 1;
+                    counter.textContent = String(0).padStart(minimumDigits, '0');
                     animateCounter(counter);
                 });
             }
@@ -1677,7 +1684,7 @@
                     });
                 }, { threshold: 0.35 });
 
-                observer.observe(section);
+                observer.observe(stats || section);
             } else {
                 runAnimation();
             }
@@ -2234,19 +2241,24 @@
 
 
         backToTopInit: function () {
-            // declare variable
-            var scrollTop = $('.backto-top');
-            $(window).scroll(function () {
-                // declare variable
-                var topPos = $(this).scrollTop();
-                // if user scrolls down - show scroll to top button
-                if (topPos > 100) {
-                    $(scrollTop).css('opacity', '1');
+            var scrollTop = document.querySelector('.backto-top');
+            var homeSection = document.querySelector('#home');
 
-                } else {
-                    $(scrollTop).css('opacity', '0');
-                }
-            });
+            if (!scrollTop || !homeSection) {
+                return;
+            }
+
+            var header = document.querySelector('.rn-header');
+            var updateVisibility = function () {
+                var headerBottom = header ? header.getBoundingClientRect().bottom : 0;
+                var homeBottom = homeSection.getBoundingClientRect().bottom;
+
+                scrollTop.classList.toggle('is-visible', homeBottom <= headerBottom);
+            };
+
+            window.addEventListener('scroll', updateVisibility, { passive: true });
+            window.addEventListener('resize', updateVisibility, false);
+            updateVisibility();
             
             //Click event to scroll to top
             $(scrollTop).on('click', function () {
